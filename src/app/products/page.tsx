@@ -22,7 +22,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 type ProductType = "Buy & Rent" | "Only Rent";
 
@@ -141,11 +141,6 @@ export default function ProductsPage() {
     },
   ];
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value as ProductType);
-    setCurrentPage(1);
-  };
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setPageInput(page.toString());
@@ -183,13 +178,38 @@ export default function ProductsPage() {
           </Button>
           <h1 className='text-xl font-semibold'>Products</h1>
         </div>
-        <Button variant='default' className='bg-black hover:bg-gray-800'>
+        <Link
+          href='/products/add-products'
+          className='bg-[#000000] text-[#FDFDFD] py-3 px-7 cursor-pointer hover:bg-gray-800 rounded-md'
+        >
           Add Products
-        </Button>
+        </Link>
       </div>
 
       <div className='mb-4 flex flex-wrap items-center justify-between'>
-        <Tabs
+        <div>
+          <button
+            onClick={() => setActiveTab("Buy & Rent")}
+            className={`px-4 py-2 rounded-full ${
+              activeTab === "Buy & Rent"
+                ? "bg-[#000000] text-[#FFFFFF]"
+                : "bg-[#F2F5F7] text-[#5F5F5F]"
+            }`}
+          >
+            Buy & Rent
+          </button>
+          <button
+            onClick={() => setActiveTab("Only Rent")}
+            className={`px-4 py-2 rounded-full ${
+              activeTab === "Only Rent"
+                ? "bg-[#000000] text-[#FFFFFF]"
+                : "bg-[#F2F5F7] text-[#5F5F5F]"
+            }`}
+          >
+            Only Rent
+          </button>
+        </div>
+        {/* <Tabs
           defaultValue='Buy & Rent'
           className='w-auto'
           onValueChange={handleTabChange}
@@ -216,9 +236,9 @@ export default function ProductsPage() {
               Only Rent
             </TabsTrigger>
           </TabsList>
-        </Tabs>
-        <div className='text-sm font-medium mt-2 sm:mt-0'>
-          Total: <span className='font-bold'>42</span>
+        </Tabs> */}
+        <div className='text-sm font-medium mt-2 sm:mt-0 text-[#545454]'>
+          Total: <span className='font-medium text-lg'>42</span>
         </div>
       </div>
 
@@ -226,12 +246,12 @@ export default function ProductsPage() {
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6'>
         {products.map((product) => (
           <div key={product.id} className='bg-white rounded-md overflow-hidden'>
-            <div className='relative h-48 w-full'>
+            <div className='relative h-[332px] w-full bg-[#F5F5F5]'>
               <Image
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
                 fill
-                className='object-cover'
+                className='object-cover p-6'
               />
             </div>
             <div className='p-4'>
