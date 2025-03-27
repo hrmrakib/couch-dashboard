@@ -43,7 +43,7 @@ export default function ProductVariantsManager() {
       condition: "Good",
       rentPrice: "$32.54",
       buyPrice: "$32.54",
-      image: "/chair1.jpg",
+      image: "/product/1.png",
       color: "White",
       isBaseVariant: true,
     },
@@ -56,7 +56,7 @@ export default function ProductVariantsManager() {
       condition: "Good",
       rentPrice: "$32.54",
       buyPrice: "$32.54",
-      image: "/chair2.jpg",
+      image: "/product/3.png",
       color: "White",
     },
   ]);
@@ -69,7 +69,7 @@ export default function ProductVariantsManager() {
     condition: "",
     rentPrice: "",
     buyPrice: "",
-    image: "/chair3.jpg",
+    image: "/product/3.png",
     color: "White",
     isEditing: true,
   });
@@ -191,10 +191,14 @@ export default function ProductVariantsManager() {
   return (
     <div className='container mx-auto p-4'>
       <div className='mb-6 flex items-center'>
-        <Button variant='ghost' size='icon' className='mr-2'>
-          <ArrowLeft className='h-5 w-5' />
+        <Button
+          variant='ghost'
+          size='icon'
+          className='mr-2 h-8 w-8 cursor-pointer'
+        >
+          <ArrowLeft className='h-8 w-8' />
         </Button>
-        <h1 className='text-xl font-semibold'>Products</h1>
+        <h1 className='text-[32px] text-[#101010] font-semibold'>Products</h1>
       </div>
 
       {/* Base Variant */}
@@ -206,7 +210,7 @@ export default function ProductVariantsManager() {
             className='border border-gray-200 rounded-lg p-6 mb-6'
           >
             <div className='flex flex-col md:flex-row gap-6'>
-              <div className='w-full md:w-32 flex-shrink-0'>
+              <div className='bg-[#E3E3E3] w-full md:w-[140px] h-[180px] border border-[#D6D6D6] rounded-md flex-shrink-0 flex items-center justify-center'>
                 <div className='relative h-32 w-32 mx-auto md:mx-0'>
                   <Image
                     src={variant.image || "/placeholder.svg"}
@@ -221,12 +225,14 @@ export default function ProductVariantsManager() {
                 <div className='flex justify-between items-start mb-2'>
                   <div>
                     <div className='flex items-center gap-2'>
-                      <h2 className='text-xl font-semibold'>{variant.name}</h2>
-                      <span className='bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded'>
+                      <h2 className='text-2xl font-semibold text-[#101010]'>
+                        {variant.name}
+                      </h2>
+                      <span className='bg-[#1C538E29] text-[#101010] text-sm px-2 py-1 rounded-full'>
                         Base variant
                       </span>
                     </div>
-                    <p className='text-sm text-gray-600 mt-1'>
+                    <p className='text-sm text-[#5F5F5F] mt-1'>
                       {variant.description}
                     </p>
                   </div>
@@ -250,12 +256,12 @@ export default function ProductVariantsManager() {
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
                   <div>
-                    <p className='text-sm font-medium'>
+                    <p className='text-lg font-medium text-[#101010]'>
                       Category: {variant.category}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm font-medium'>
+                    <p className='text-lg font-medium text-[#101010]'>
                       Condition: {variant.condition}
                     </p>
                   </div>
@@ -263,12 +269,12 @@ export default function ProductVariantsManager() {
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
                   <div>
-                    <p className='text-sm font-medium'>
+                    <p className='text-xl font-medium text-[#101010]'>
                       Rent {variant.rentPrice}
                     </p>
                   </div>
                   <div>
-                    <p className='text-sm font-medium'>
+                    <p className='text-xl font-medium text-[#101010]'>
                       Buy: {variant.buyPrice}
                     </p>
                   </div>
@@ -276,7 +282,7 @@ export default function ProductVariantsManager() {
 
                 <div className='mt-4'>
                   <div className='flex items-center gap-2'>
-                    <p className='text-sm font-medium'>Product Color</p>
+                    <p className='text-sm text-[#545454]'>Product Color</p>
                     <RadioGroup value={variant.color} className='flex gap-2'>
                       <div className='flex items-center gap-1.5'>
                         <RadioGroupItem
@@ -337,7 +343,7 @@ export default function ProductVariantsManager() {
       {/* Other Variants Section */}
       <div className='mb-4 flex justify-between items-center'>
         <h2 className='text-lg font-medium'>Other Variants</h2>
-        <p className='text-sm'>
+        <p className='text-base text-[#545454] font-medium'>
           Total: {variants.filter((v) => !v.isBaseVariant).length}
         </p>
       </div>
@@ -352,11 +358,11 @@ export default function ProductVariantsManager() {
           >
             {variant.isEditing ? (
               <div className='flex flex-col md:flex-row gap-6'>
-                <div className='w-full md:w-32 flex-shrink-0'>
+                <div className='bg-[#E3E3E3] w-full md:w-[140px] h-[180px] border border-[#D6D6D6] rounded-md flex-shrink-0 flex items-center justify-center'>
                   <div className='relative h-32 w-32 mx-auto md:mx-0'>
                     <Image
                       src={variant.image || "/placeholder.svg"}
-                      alt='Product variant'
+                      alt={variant.name}
                       fill
                       className='object-cover'
                     />
@@ -384,9 +390,14 @@ export default function ProductVariantsManager() {
                     </div>
                   </div>
 
-                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+                  <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4'>
                     <div>
-                      <Label htmlFor={`${variant.id}-name`}>Product name</Label>
+                      <Label
+                        htmlFor={`${variant.id}-name`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
+                        Product name
+                      </Label>
                       <Input
                         id={`${variant.id}-name`}
                         value={variant.name}
@@ -398,7 +409,12 @@ export default function ProductVariantsManager() {
                     </div>
 
                     <div>
-                      <Label htmlFor={`${variant.id}-category`}>Category</Label>
+                      <Label
+                        htmlFor={`${variant.id}-category`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
+                        Category
+                      </Label>
                       <Input
                         id={`${variant.id}-category`}
                         value={variant.category}
@@ -412,32 +428,60 @@ export default function ProductVariantsManager() {
                         placeholder='Enter a brand name'
                       />
                     </div>
-                  </div>
-
-                  <div className='mb-4'>
-                    <Label htmlFor={`${variant.id}-condition`}>
-                      products Condition
-                    </Label>
-                    <Select
-                      value={variant.condition}
-                      onValueChange={(value) =>
-                        handleInputChange(variant.id, "condition", value)
-                      }
-                    >
-                      <SelectTrigger id={`${variant.id}-condition`}>
-                        <SelectValue placeholder='Select condition' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value='Good'>Good</SelectItem>
-                        <SelectItem value='Fair'>Fair</SelectItem>
-                        <SelectItem value='Poor'>Poor</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {/* <div>
+                      <Label
+                        htmlFor={`${variant.id}-category`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
+                        Category
+                      </Label>
+                      <Input
+                        id={`${variant.id}-category`}
+                        value={variant.category}
+                        onChange={(e) =>
+                          handleInputChange(
+                            variant.id,
+                            "category",
+                            e.target.value
+                          )
+                        }
+                        placeholder='Enter a brand name'
+                      />
+                    </div> */}
+                    <div>
+                      <Label
+                        htmlFor={`${variant.id}-condition`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
+                        Products Condition
+                      </Label>
+                      <Select
+                        value={variant.condition}
+                        onValueChange={(value) =>
+                          handleInputChange(variant.id, "condition", value)
+                        }
+                      >
+                        <SelectTrigger
+                          id={`${variant.id}-condition`}
+                          className='w-full h-14'
+                        >
+                          <SelectValue placeholder='Select condition' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='Good'>Good</SelectItem>
+                          <SelectItem value='Fair'>Fair</SelectItem>
+                          <SelectItem value='Poor'>Poor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
                     <div>
-                      <Label htmlFor={`${variant.id}-buy-price`}>
+                      <Label
+                        htmlFor={`${variant.id}-buy-price`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
                         Price (for buying)
                       </Label>
                       <Input
@@ -455,7 +499,10 @@ export default function ProductVariantsManager() {
                     </div>
 
                     <div>
-                      <Label htmlFor={`${variant.id}-rent-price`}>
+                      <Label
+                        htmlFor={`${variant.id}-rent-price`}
+                        className='text-[#333333] text-base font-medium mb-1.5'
+                      >
                         Rental Price
                       </Label>
                       <Input
@@ -474,7 +521,12 @@ export default function ProductVariantsManager() {
                   </div>
 
                   <div>
-                    <Label>Product Color</Label>
+                    <Label
+                      htmlFor='new-color'
+                      className='text-[#333333] text-base font-medium mb-1.5'
+                    >
+                      Product Color
+                    </Label>
                     <RadioGroup
                       value={variant.color}
                       onValueChange={(value: string) =>
@@ -487,7 +539,10 @@ export default function ProductVariantsManager() {
                           value='White'
                           id={`${variant.id}-edit-white`}
                         />
-                        <Label htmlFor={`${variant.id}-edit-white`}>
+                        <Label
+                          htmlFor={`${variant.id}-edit-white`}
+                          className='text-[#333333] text-base font-medium'
+                        >
                           White
                         </Label>
                       </div>
@@ -496,7 +551,10 @@ export default function ProductVariantsManager() {
                           value='Black'
                           id={`${variant.id}-edit-black`}
                         />
-                        <Label htmlFor={`${variant.id}-edit-black`}>
+                        <Label
+                          htmlFor={`${variant.id}-edit-black`}
+                          className='text-[#333333] text-base font-medium'
+                        >
                           Black
                         </Label>
                       </div>
@@ -505,7 +563,12 @@ export default function ProductVariantsManager() {
                           value='Red'
                           id={`${variant.id}-edit-red`}
                         />
-                        <Label htmlFor={`${variant.id}-edit-red`}>Red</Label>
+                        <Label
+                          htmlFor={`${variant.id}-edit-red`}
+                          className='text-[#333333] text-base font-medium'
+                        >
+                          Red
+                        </Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -513,7 +576,7 @@ export default function ProductVariantsManager() {
               </div>
             ) : (
               <div className='flex flex-col md:flex-row gap-6'>
-                <div className='w-full md:w-32 flex-shrink-0'>
+                <div className='bg-[#E3E3E3] w-full md:w-[140px] h-[180px] border border-[#D6D6D6] rounded-md flex-shrink-0 flex items-center justify-center'>
                   <div className='relative h-32 w-32 mx-auto md:mx-0'>
                     <Image
                       src={variant.image || "/placeholder.svg"}
@@ -678,7 +741,12 @@ export default function ProductVariantsManager() {
 
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
                 <div>
-                  <Label htmlFor='new-name'>Product name</Label>
+                  <Label
+                    htmlFor='new-name'
+                    className='text-[#333333] text-base font-medium mb-1.5'
+                  >
+                    Product name
+                  </Label>
                   <Input
                     id='new-name'
                     value={newVariant.name}
@@ -690,7 +758,12 @@ export default function ProductVariantsManager() {
                 </div>
 
                 <div>
-                  <Label htmlFor='new-category'>Category</Label>
+                  <Label
+                    htmlFor='new-category'
+                    className='text-[#333333] text-base font-medium mb-1.5'
+                  >
+                    Category
+                  </Label>
                   <Input
                     id='new-category'
                     value={newVariant.category}
@@ -703,7 +776,12 @@ export default function ProductVariantsManager() {
               </div>
 
               <div className='mb-4'>
-                <Label htmlFor='new-condition'>products Condition</Label>
+                <Label
+                  htmlFor='new-condition'
+                  className='text-[#333333] text-base font-medium mb-1.5'
+                >
+                  products Condition
+                </Label>
                 <Select
                   value={newVariant.condition}
                   onValueChange={(value) =>
@@ -723,7 +801,12 @@ export default function ProductVariantsManager() {
 
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
                 <div>
-                  <Label htmlFor='new-buy-price'>Price (for buying)</Label>
+                  <Label
+                    htmlFor='new-buy-price'
+                    className='text-[#333333] text-base font-medium mb-1.5'
+                  >
+                    Price (for buying)
+                  </Label>
                   <Input
                     id='new-buy-price'
                     value={newVariant.buyPrice}
@@ -735,7 +818,12 @@ export default function ProductVariantsManager() {
                 </div>
 
                 <div>
-                  <Label htmlFor='new-rent-price'>Rental Price</Label>
+                  <Label
+                    htmlFor='new-rent-price'
+                    className='text-[#333333] text-base font-medium mb-1.5'
+                  >
+                    Rental Price
+                  </Label>
                   <Input
                     id='new-rent-price'
                     value={newVariant.rentPrice}
@@ -748,7 +836,12 @@ export default function ProductVariantsManager() {
               </div>
 
               <div>
-                <Label>Product Color</Label>
+                <Label
+                  htmlFor='new-color'
+                  className='text-[#333333] text-base font-medium mb-1.5'
+                >
+                  Product Color
+                </Label>
                 <RadioGroup
                   value={newVariant.color}
                   onValueChange={(value: string) =>
@@ -758,15 +851,30 @@ export default function ProductVariantsManager() {
                 >
                   <div className='flex items-center gap-1.5'>
                     <RadioGroupItem value='White' id='new-white' />
-                    <Label htmlFor='new-white'>White</Label>
+                    <Label
+                      htmlFor='new-white'
+                      className='text-[#333333] text-base font-medium'
+                    >
+                      White
+                    </Label>
                   </div>
                   <div className='flex items-center gap-1.5'>
                     <RadioGroupItem value='Black' id='new-black' />
-                    <Label htmlFor='new-black'>Black</Label>
+                    <Label
+                      htmlFor='new-black'
+                      className='text-[#333333] text-base font-medium'
+                    >
+                      Black
+                    </Label>
                   </div>
                   <div className='flex items-center gap-1.5'>
                     <RadioGroupItem value='Red' id='new-red' />
-                    <Label htmlFor='new-red'>Red</Label>
+                    <Label
+                      htmlFor='new-red'
+                      className='text-[#333333] text-base font-medium'
+                    >
+                      Red
+                    </Label>
                   </div>
                 </RadioGroup>
               </div>
