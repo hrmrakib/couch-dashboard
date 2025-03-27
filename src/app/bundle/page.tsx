@@ -146,7 +146,7 @@ export default function BundlePage() {
           setInputPage={setInputPage}
         /> */}
 
-        <div className='flex flex-col sm:flex-row items-center justify-between gap-4'>
+        <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
           <div className='flex items-center space-x-2'>
             <Button
               variant='outline'
