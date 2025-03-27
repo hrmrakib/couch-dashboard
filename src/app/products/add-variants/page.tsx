@@ -428,26 +428,7 @@ export default function ProductVariantsManager() {
                         placeholder='Enter a brand name'
                       />
                     </div>
-                    {/* <div>
-                      <Label
-                        htmlFor={`${variant.id}-category`}
-                        className='text-[#333333] text-base font-medium mb-1.5'
-                      >
-                        Category
-                      </Label>
-                      <Input
-                        id={`${variant.id}-category`}
-                        value={variant.category}
-                        onChange={(e) =>
-                          handleInputChange(
-                            variant.id,
-                            "category",
-                            e.target.value
-                          )
-                        }
-                        placeholder='Enter a brand name'
-                      />
-                    </div> */}
+
                     <div>
                       <Label
                         htmlFor={`${variant.id}-condition`}
