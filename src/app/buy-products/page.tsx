@@ -1,487 +1,366 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
-import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useRouter } from "next/navigation";
+import ProductCard from "@/components/buy-product/ProductCard";
+import ProductDetailModal from "@/components/buy-product/ProductDetailModal";
+import FilterTabs from "@/components/buy-product/FilterTab";
+import Pagination from "@/components/buy-product/Pagination";
+import type { Product, ProductStatus } from "@/lib/types";
 
-type OrderStatus = "Success" | "Pending" | "Shipped" | "Cancel";
+// Mock data for products
+const mockProducts: Product[] = [
+  {
+    id: "1",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/1.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "pending",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "2",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/2.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "cancel",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "3",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/3.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "pending",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "4",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/4.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "confirm",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "5",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/5.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "confirm",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "6",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/6.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "cancel",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "7",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/7.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "pending",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "8",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/8.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "cancel",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "9",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/9.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "cancel",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "10",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/10.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "pending",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "11",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/11.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "confirm",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+  {
+    id: "12",
+    name: "Wooden Sofa",
+    price: 150,
+    image: "/product/12.png",
+    seller: {
+      name: "Seller Name",
+      date: "9 Jun 2024",
+      accountNumber: "0000 0000 0000 0000",
+      phone: "000 0000 0000 0000",
+      email: "debra.holt@example.com",
+    },
+    status: "pending",
+    details: {
+      model: "Xbox",
+      storage: "256Gb",
+      condition: "Good",
+      controller: 0,
+    },
+  },
+];
 
-type Order = {
-  id: string;
-  productName: string;
-  productImage: string;
-  date: string;
-  time: string;
-  customer: string;
-  transactionId: string;
-  payment: string;
-  price: string;
-  stock: string;
-  status: OrderStatus;
-};
-
-const statusColors = {
-  Success: "bg-green-100 text-green-600",
-  Pending: "bg-blue-100 text-blue-600",
-  Shipped: "bg-yellow-100 text-yellow-600",
-  Cancel: "bg-red-100 text-red-600",
-};
-
-export default function OrderProductList() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"All" | OrderStatus>("All");
+export default function Home() {
+  const [selectedTab, setSelectedTab] = useState<ProductStatus | "all">("all");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageInput, setPageInput] = useState("1");
-  const totalPages = 12;
+  const [products, setProducts] = useState<Product[]>(mockProducts);
 
-  const orders: Order[] = [
-    {
-      id: "1",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/1.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Success",
-    },
-    {
-      id: "2",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/2.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Pending",
-    },
-    {
-      id: "3",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/3.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Cancel",
-    },
-    {
-      id: "4",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/4.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Success",
-    },
-    {
-      id: "5",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/5.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Pending",
-    },
-    {
-      id: "6",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/6.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Shipped",
-    },
-    {
-      id: "7",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/7.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Cancel",
-    },
-    {
-      id: "8",
-      productName: "Boy's Non-Shiny Chair",
-      productImage: "/products/8.png",
-      date: "8 Sep, 2020",
-      time: "07:40 am",
-      customer: "Darrell Steward",
-      transactionId: "TXN-93A7CD5B",
-      payment: "COD",
-      price: "$202.87",
-      stock: "40/200",
-      status: "Shipped",
-    },
-  ];
+  const itemsPerPage = 12;
 
-  const filteredOrders =
-    activeTab === "All"
-      ? orders
-      : orders.filter((order) => order.status === activeTab);
+  // Filter products based on selected tab
+  const filteredProducts =
+    selectedTab === "all"
+      ? products
+      : products.filter((product) => product.status === selectedTab);
 
-  const handleTabChange = (tab: "All" | OrderStatus) => {
-    setActiveTab(tab);
-    setCurrentPage(1);
-  };
+  // Calculate pagination
+  const totalItems = filteredProducts.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  const currentItems = filteredProducts.slice(startIndex, endIndex);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    setPageInput(page.toString());
-  };
+  // Handle product status change
+  const handleStatusChange = (productId: string, newStatus: ProductStatus) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId ? { ...product, status: newStatus } : product
+      )
+    );
 
-  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPageInput(e.target.value);
-  };
-
-  const handleGoToPage = () => {
-    const page = Number.parseInt(pageInput);
-    if (!isNaN(page) && page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    } else {
-      setPageInput(currentPage.toString());
+    if (selectedProduct && selectedProduct.id === productId) {
+      setSelectedProduct({ ...selectedProduct, status: newStatus });
     }
   };
 
+  // Open product detail modal
+  const handleOpenModal = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  // Close product detail modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
   return (
-    <div className='container mx-auto p-4'>
-      <div className='mb-6 flex items-center'>
-        <Button
-          onClick={() => router.back()}
-          variant='ghost'
-          size='icon'
-          className='mr-2 cursor-pointer'
-        >
-          <ArrowLeft size={24} />
-        </Button>
-        <h1 className='text-xl md:text-[32px] text-[#333333] font-semibold'>
-          Order Product List
-        </h1>
-      </div>
+    <main className='min-h-screen bg-gray-100'>
+      <div className='container mx-auto px-4 py-6'>
+        {/* Header */}
+        <div className='flex items-center mb-6'>
+          <button className='flex items-center text-gray-800 font-medium'>
+            <ArrowLeft className='mr-2 h-5 w-5' />
+            Buy Product
+          </button>
+        </div>
 
-      <div className='bg-white rounded-lg border border-gray-200 overflow-hidden'>
-        {/* Status Tabs */}
-        <div className='p-4 flex flex-wrap items-center justify-between border-b border-gray-200'>
-          <div className='flex flex-wrap gap-2 mb-2 sm:mb-0'>
-            <Button
-              variant={activeTab === "All" ? "default" : "outline"}
-              className={`rounded-full text-sm px-4 py-1 h-auto ${
-                activeTab === "All" ? "bg-gray-800" : ""
-              }`}
-              onClick={() => handleTabChange("All")}
-            >
-              All
-            </Button>
-            <Button
-              variant={activeTab === "Pending" ? "default" : "outline"}
-              className={`rounded-full text-sm px-4 py-1 h-auto ${
-                activeTab === "Pending" ? "bg-blue-600" : ""
-              }`}
-              onClick={() => handleTabChange("Pending")}
-            >
-              Pending
-            </Button>
-            <Button
-              variant={activeTab === "Shipped" ? "default" : "outline"}
-              className={`rounded-full text-sm px-4 py-1 h-auto ${
-                activeTab === "Shipped" ? "bg-yellow-500" : ""
-              }`}
-              onClick={() => handleTabChange("Shipped")}
-            >
-              Shipped
-            </Button>
-            <Button
-              variant={activeTab === "Success" ? "default" : "outline"}
-              className={`rounded-full text-sm px-4 py-1 h-auto ${
-                activeTab === "Success" ? "bg-green-600" : ""
-              }`}
-              onClick={() => handleTabChange("Success")}
-            >
-              Success
-            </Button>
-            <Button
-              variant={activeTab === "Cancel" ? "default" : "outline"}
-              className={`rounded-full text-sm px-4 py-1 h-auto ${
-                activeTab === "Cancel" ? "bg-red-500" : ""
-              }`}
-              onClick={() => handleTabChange("Cancel")}
-            >
-              Cancel
-            </Button>
-          </div>
-          <div className='text-sm font-medium'>
-            Total: <span className='font-bold'>42</span>
+        {/* Filter tabs and total count */}
+        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6'>
+          <FilterTabs
+            selectedTab={selectedTab}
+            onSelectTab={setSelectedTab}
+            counts={{
+              all: products.length,
+              pending: products.filter((p) => p.status === "pending").length,
+              confirm: products.filter((p) => p.status === "confirm").length,
+              cancel: products.filter((p) => p.status === "cancel").length,
+            }}
+          />
+          <div className='text-sm mt-2 sm:mt-0'>
+            Total: <span className='font-medium'>{totalItems}</span>
           </div>
         </div>
 
-        {/* Table Header */}
-        <div className='hidden md:grid grid-cols-7 gap-4 p-4 border-b border-gray-200 bg-gray-50 font-medium text-sm'>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Product
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Customer
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Transaction ID
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Payment
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Price
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Stock
-          </div>
-          <div className='col-span-1 text-sm font-medium text-[#333333]'>
-            Status
-          </div>
-        </div>
-
-        {/* Table Body */}
-        <div className='divide-y divide-gray-200'>
-          {filteredOrders.map((order) => (
-            <div key={order.id} className='p-4'>
-              <div className='md:grid md:grid-cols-7 md:gap-4 flex flex-col space-y-3 md:space-y-0'>
-                {/* Product */}
-                <div className='col-span-1 flex items-center space-x-3'>
-                  <div className='w-16 h-16 relative flex-shrink-0 border border-gray-200 rounded-md overflow-hidden'>
-                    <Image
-                      src={order.productImage || "/placeholder.svg"}
-                      alt={order.productName}
-                      fill
-                      className='object-cover'
-                    />
-                  </div>
-                  <div>
-                    <p className='font-medium text-sm'>{order.productName}</p>
-                    <p className='text-xs text-gray-500'>
-                      {order.date} | {order.time}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Customer */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Customer:
-                  </div>
-                  <div>{order.customer}</div>
-                </div>
-
-                {/* Transaction ID */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Transaction ID:
-                  </div>
-                  <div>{order.transactionId}</div>
-                </div>
-
-                {/* Payment */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Payment:
-                  </div>
-                  <div>{order.payment}</div>
-                </div>
-
-                {/* Price */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Price:
-                  </div>
-                  <div>{order.price}</div>
-                </div>
-
-                {/* Stock */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Stock:
-                  </div>
-                  <div>{order.stock}</div>
-                </div>
-
-                {/* Status */}
-                <div className='col-span-1 flex md:items-center'>
-                  <div className='md:hidden font-medium text-xs text-gray-500 mr-2'>
-                    Status:
-                  </div>
-                  <Badge
-                    className={`font-medium ${statusColors[order.status]}`}
-                  >
-                    {order.status}
-                  </Badge>
-                </div>
-              </div>
-            </div>
+        {/* Product grid */}
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+          {currentItems.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onViewDetails={() => handleOpenModal(product)}
+            />
           ))}
         </div>
 
         {/* Pagination */}
-        <div className='p-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-center gap-4'>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) handlePageChange(currentPage - 1);
-                  }}
-                  className={
-                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-
-              {currentPage > 2 && (
-                <PaginationItem>
-                  <PaginationLink
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(1);
-                    }}
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-
-              {currentPage > 3 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-
-              {currentPage > 1 && (
-                <PaginationItem>
-                  <PaginationLink
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage - 1);
-                    }}
-                  >
-                    {currentPage - 1}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-
-              <PaginationItem>
-                <PaginationLink href='#' isActive>
-                  {currentPage}
-                </PaginationLink>
-              </PaginationItem>
-
-              {currentPage < totalPages && (
-                <PaginationItem>
-                  <PaginationLink
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage + 1);
-                    }}
-                  >
-                    {currentPage + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-
-              {currentPage < totalPages - 2 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-
-              {currentPage < totalPages - 1 && (
-                <PaginationItem>
-                  <PaginationLink
-                    href='#'
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(totalPages);
-                    }}
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href='#'
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages)
-                      handlePageChange(currentPage + 1);
-                  }}
-                  className={
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-
-          <div className='flex items-center gap-2'>
-            <span className='text-sm'>Page</span>
-            <Input
-              type='text'
-              value={pageInput}
-              onChange={handlePageInputChange}
-              className='w-16 h-9 text-center'
+        {totalPages > 1 && (
+          <div className='mt-8 flex justify-center'>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
             />
-            <Button variant='default' size='sm' onClick={handleGoToPage}>
-              Go
-            </Button>
           </div>
-        </div>
+        )}
+
+        {/* Product detail modal */}
+        {selectedProduct && (
+          <ProductDetailModal
+            product={selectedProduct}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onStatusChange={(newStatus) =>
+              handleStatusChange(selectedProduct.id, newStatus)
+            }
+          />
+        )}
       </div>
-    </div>
+    </main>
   );
 }

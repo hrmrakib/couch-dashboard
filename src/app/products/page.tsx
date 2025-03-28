@@ -256,7 +256,9 @@ export default function ProductsPage() {
             </div>
             <div className='p-4'>
               <div className='flex justify-between items-start mb-1'>
-                <h3 className='font-medium'>{product.name}</h3>
+                <h3 className='font-medium text-[32px] text-[#000000]'>
+                  {product.name}
+                </h3>
                 <Button
                   variant='ghost'
                   size='icon'
@@ -265,15 +267,18 @@ export default function ProductsPage() {
                   <Info className='h-5 w-5 text-gray-500' />
                 </Button>
               </div>
-              <p className='text-sm text-gray-600 mb-2'>
-                Condition: {product.condition}
+              <p className='text-lg text-[#333333] mb-2'>
+                Condition:{" "}
+                <span className='text-[#333333] font-medium'>
+                  {product.condition}
+                </span>
               </p>
               <div className='flex justify-between items-center'>
-                <div>
-                  <p className='text-sm font-medium'>
+                <div className='flex justify-between items-center gap-6'>
+                  <p className='text-lg text-[#333333]'>
                     Price: {product.rentPrice}
                   </p>
-                  <p className='text-sm text-gray-500'>{product.buyPrice}</p>
+                  <p className='text-lg text-[#333333]'>{product.buyPrice}</p>
                 </div>
                 <div className='relative'>
                   <DropdownMenu
@@ -291,7 +296,7 @@ export default function ProductsPage() {
                         <MoreVertical className='h-5 w-5' />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align='end' className='w-32'>
+                    <DropdownMenuContent align='end' className='w-32 border'>
                       <DropdownMenuItem onClick={() => handleEdit(product.id)}>
                         Edit
                       </DropdownMenuItem>
