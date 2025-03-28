@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/components/ui/use-toast";
 import {
   Select,
   SelectContent,
@@ -99,11 +98,7 @@ export default function ProductVariantsManager() {
 
   const handleSaveNewVariant = () => {
     if (!newVariant.name) {
-      toast({
-        title: "Missing information",
-        description: "Please provide at least a product name.",
-        variant: "destructive",
-      });
+      alert("Please provide at least a product name.");
       return;
     }
 
@@ -118,10 +113,7 @@ export default function ProductVariantsManager() {
     setVariantCount(variantCount + 1);
     setShowNewVariantForm(false);
 
-    toast({
-      title: "Variant added",
-      description: "Your product variant has been added successfully.",
-    });
+    alert("Your product variant has been added successfully.");
   };
 
   const handleEditVariant = (id: string) => {
@@ -135,10 +127,7 @@ export default function ProductVariantsManager() {
   const handleDeleteVariant = (id: string) => {
     setVariants(variants.filter((variant) => variant.id !== id));
 
-    toast({
-      title: "Variant deleted",
-      description: "The product variant has been removed.",
-    });
+    alert("The product variant has been removed.");
   };
 
   const handleUpdateVariant = (id: string) => {
@@ -148,7 +137,7 @@ export default function ProductVariantsManager() {
       )
     );
 
-    toast({
+    alert({
       title: "Changes saved",
       description: "Your changes have been saved successfully.",
     });
