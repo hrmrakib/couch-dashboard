@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, Pencil, Search, Trash } from "lucide-react";
+import { ArrowLeft, Check, Pencil, Search, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 // Sample data for bundles
 const bundleItems = [
@@ -24,14 +26,14 @@ const bundleItems = [
 
 // Sample data for products to add
 const productItems = [
-  { id: 1, name: "Wooden Sofa" },
-  { id: 2, name: "Wooden Sofa" },
-  { id: 3, name: "Wooden Sofa" },
-  { id: 4, name: "Wooden Sofa" },
-  { id: 5, name: "Wooden Sofa" },
-  { id: 6, name: "Wooden Sofa" },
-  { id: 7, name: "Wooden Sofa" },
-  { id: 8, name: "Wooden Sofa" },
+  { id: 1, name: "Wooden Sofa", image: "/product/1.png" },
+  { id: 2, name: "Oila Chair", image: "/product/2.png" },
+  { id: 3, name: "Bed", image: "/product/3.png" },
+  { id: 4, name: "Ergonomic Bed", image: "/product/4.png" },
+  { id: 5, name: "Rolling Desk", image: "/product/5.png" },
+  { id: 6, name: "Cabinet", image: "/product/6.png" },
+  { id: 7, name: "Chair", image: "/product/7.png" },
+  { id: 8, name: "Table", image: "/product/8.png" },
 ];
 
 export default function BundlePage() {
@@ -41,6 +43,9 @@ export default function BundlePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const router = useRouter();
 
   const totalPages = 12; // Hardcoded for demo
 
@@ -80,6 +85,30 @@ export default function BundlePage() {
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Handle toggling product selection
+  const toggleProductSelection = (productId: string) => {
+    setSelectedProducts((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter((id) => id !== productId);
+      } else {
+        return [...prev, productId];
+      }
+    });
+  };
+
+  // Reset selections when dialog closes
+  const handleDialogChange = (open: boolean) => {
+    setIsAddDialogOpen(open);
+    if (!open) {
+      setSelectedProducts([]);
+      setSearchQuery("");
+    }
+  };
+
+  const handleNext = () => {
+    router.push("/bundle/add-bundle");
+  };
+
   return (
     <div className='container mx-auto py-6'>
       {/* Header */}
@@ -90,7 +119,10 @@ export default function BundlePage() {
             Bundle
           </h1>
         </div>
-        <Button className='bg-black text-white hover:bg-gray-800 rounded px-4 py-2 h-10'>
+        <Button
+          onClick={() => setIsAddDialogOpen(true)}
+          className='bg-black text-white hover:bg-gray-800 rounded px-4 py-2 h-10'
+        >
           Add Item
         </Button>
       </div>
@@ -301,6 +333,79 @@ export default function BundlePage() {
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add product dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={handleDialogChange}>
+        <DialogContent className='sm:max-w-md'>
+          <DialogTitle className='sr-only'>Add Products to Bundle</DialogTitle>
+
+          {/* Search input */}
+          <div className='relative mb-4 mt-2'>
+            <input
+              type='text'
+              placeholder='Type product name'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500'
+            />
+            <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+              <Search className='h-5 w-5 text-gray-400' />
+            </div>
+          </div>
+
+          {/* Product list */}
+          <div className='space-y-2 max-h-[50vh] overflow-y-auto mb-4'>
+            {filteredProducts.map((product) => {
+              const isSelected = selectedProducts.includes(product.id);
+
+              return (
+                <div
+                  key={product.id}
+                  className={`flex items-center justify-between p-3 rounded-md ${
+                    isSelected
+                      ? "bg-blue-50 border border-blue-200"
+                      : "bg-gray-50"
+                  }`}
+                >
+                  <div className='flex items-center'>
+                    <div className='relative w-8 h-8 mr-3'>
+                      <Image
+                        src={product?.image || "/placeholder.svg"}
+                        alt={product.name}
+                        width={32}
+                        height={32}
+                        className='object-contain'
+                      />
+                    </div>
+                    <span className='text-sm font-medium'>{product.name}</span>
+                  </div>
+
+                  <button
+                    onClick={() => toggleProductSelection(product.id)}
+                    className={`flex items-center justify-center w-6 h-6 rounded-full ${
+                      isSelected
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-500 hover:bg-gray-300"
+                    }`}
+                  >
+                    <Check className='h-4 w-4' />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={handleNext}
+              disabled={selectedProducts.length === 0}
+              className='w-full bg-black text-white hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed'
+            >
+              Next
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

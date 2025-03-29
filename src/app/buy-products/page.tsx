@@ -322,8 +322,11 @@ export default function Home() {
               cancel: products.filter((p) => p.status === "cancel").length,
             }}
           />
-          <div className='text-sm mt-2 sm:mt-0'>
-            Total: <span className='font-medium'>{totalItems}</span>
+          <div className='text-base mt-2 sm:mt-0 text-[#545454]'>
+            Total:{" "}
+            <span className='text-lg text-[#171717] font-medium'>
+              {totalItems}
+            </span>
           </div>
         </div>
 
