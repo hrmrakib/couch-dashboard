@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <header className='border-b border-gray-100'>
       <div className='flex items-center justify-between px-6 py-4'>
-        <div>
+        <div className='hidden md:block'>
           <h1 className='text-lg md:text-2xl font-semibold'>Welcome, Sharon</h1>
           <p className='text-base text-[#404040]'>Have a nice day</p>
         </div>

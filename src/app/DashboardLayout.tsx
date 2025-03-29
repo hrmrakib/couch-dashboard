@@ -4,6 +4,7 @@ import DashboardSidebar from "@/components/sidebar/DashboardSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Header from "@/components/header/Header";
 import { usePathname } from "next/navigation";
+import MobileBottomNavbar from "@/components/sidebar/MobileBottomNavbar";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -30,6 +31,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
               {children}
             </main>
+
+            <MobileBottomNavbar />
           </SidebarProvider>
         </div>
       )}
