@@ -28,7 +28,7 @@ export default function Verify() {
       <div className='container mx-auto w-full flex z-50'>
         <div className='w-full md:w-1/2 h-[626px] flex flex-col items-center justify-center bg-[#FFFFFF] rounded-lg p-2 max-w-[660px] shadow-lg'>
           <div className='w-[80%] mx-auto'>
-            <div className='flex items-center justify-center gap-2'>
+            <div className='flex items-center justify-center gap-2 mb-6'>
               <div>
                 <svg
                   width='24'
@@ -46,7 +46,7 @@ export default function Verify() {
                   />
                 </svg>
               </div>
-              <h2 className='text-2xl font-medium text-center text-[#333333] mb-6 block'>
+              <h2 className='text-2xl font-medium text-center text-[#333333] block'>
                 Verify Email
               </h2>
             </div>
@@ -59,7 +59,7 @@ export default function Verify() {
                   value={otp}
                   onChange={setOtp} // Control the OTP state
                 >
-                  <InputOTPGroup className='flex items-center justify-center gap-2.5 *:border-[#545454] rounded-full'>
+                  <InputOTPGroup className='flex flex-wrap items-center justify-center gap-2.5 *:border-[#545454] rounded-full'>
                     {[...Array(6)].map((_, index) => (
                       <InputOTPSlot
                         key={index}
