@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BarChart } from "@/components/BarChart";
 import { TransactionTable } from "@/components/TransactionTable";
+import { EarningsChart } from "./transaction-history/EarningChart";
 
 export default function Dashboard() {
   return (
@@ -76,7 +76,9 @@ export default function Dashboard() {
               {/* Earnings Chart */}
               <div className='mb-8'>
                 <div className='flex items-center justify-between mb-6'>
-                  <h2 className='text-xl font-medium'>Earnings</h2>
+                  <h2 className='text-[29px] text-[#181414] font-medium'>
+                    Earnings
+                  </h2>
                   <Select defaultValue='2024'>
                     <SelectTrigger className='w-[180px]'>
                       <SelectValue placeholder='Select Year' />
@@ -90,7 +92,22 @@ export default function Dashboard() {
                 </div>
 
                 <div className='h-[250px] w-full'>
-                  <BarChart />
+                  <EarningsChart
+                    data={[
+                      { month: "Jan", amount: 3000 },
+                      { month: "Feb", amount: 2500 },
+                      { month: "Mar", amount: 6000 },
+                      { month: "Apr", amount: 7000 },
+                      { month: "May", amount: 6000 },
+                      { month: "Jun", amount: 6000 },
+                      { month: "Jul", amount: 7000 },
+                      { month: "Aug", amount: 4000 },
+                      { month: "Sep", amount: 2000 },
+                      { month: "Oct", amount: 7000 },
+                      { month: "Nov", amount: 8000 },
+                      { month: "Dec", amount: 7000 },
+                    ]}
+                  />
                 </div>
               </div>
 
