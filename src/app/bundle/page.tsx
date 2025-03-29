@@ -358,7 +358,9 @@ export default function BundlePage() {
           {/* Product list */}
           <div className='space-y-2 max-h-[50vh] overflow-y-auto mb-4'>
             {filteredProducts.map((product) => {
-              const isSelected = selectedProducts.includes(product.id);
+              const isSelected = selectedProducts.includes(
+                product.id.toString()
+              );
 
               return (
                 <div
@@ -383,7 +385,9 @@ export default function BundlePage() {
                   </div>
 
                   <button
-                    onClick={() => toggleProductSelection(product.id)}
+                    onClick={() =>
+                      toggleProductSelection(product.id.toString())
+                    }
                     className={`flex items-center justify-center w-6 h-6 rounded-full ${
                       isSelected
                         ? "bg-blue-500 text-white"
