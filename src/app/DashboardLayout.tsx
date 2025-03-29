@@ -12,7 +12,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     pathname === "/signin" ||
     pathname === "/signup" ||
     pathname === "/verify" ||
-    pathname === "/forget-password";
+    pathname === "/forget-password" ||
+    pathname === "/create-password";
 
   console.log(pathname);
 

@@ -86,7 +86,7 @@ export default function SignUp() {
       <div className='absolute inset-0 bg-gray-900 opacity-20'></div>
 
       <div className='container mx-auto w-full flex z-50'>
-        <div className='w-1/2 h-[626px] flex flex-col items-center justify-center bg-[#FFFFFF] rounded-lg p-2 max-w-[660px] shadow-lg'>
+        <div className='w-full md:w-1/2 h-[626px] flex flex-col items-center justify-center bg-[#FFFFFF] rounded-lg p-2 max-w-[660px] shadow-lg'>
           <div className='w-[80%] mx-auto'>
             <h2 className='text-2xl font-medium text-center text-[#333333] mb-6 block'>
               Sign Up
@@ -277,7 +277,7 @@ export default function SignUp() {
           </div>
         </div>
 
-        <div className='w-1/2'>jk</div>
+        <div className='hidden md:block w-1/2'></div>
       </div>
     </div>
   );

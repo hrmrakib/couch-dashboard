@@ -22,6 +22,7 @@
     "chart.js": "^4.4.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "input-otp": "^1.4.2",
     "jodit-react": "^5.2.18",
     "lucide-react": "^0.484.0",
     "next": "15.2.4",

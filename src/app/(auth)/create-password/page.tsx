@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function SignUp() {
@@ -88,72 +87,34 @@ export default function SignUp() {
       <div className='container mx-auto w-full flex z-50'>
         <div className='w-1/2 h-[626px] flex flex-col items-center justify-center bg-[#FFFFFF] rounded-lg p-2 max-w-[660px] shadow-lg'>
           <div className='w-[80%] mx-auto'>
-            <h2 className='text-2xl font-medium text-center text-[#333333] mb-6 block'>
-              Sign Up
-            </h2>
+            <div className='flex items-center justify-center gap-2 mb-4'>
+              <div>
+                <svg
+                  width='24'
+                  height='25'
+                  viewBox='0 0 24 25'
+                  fill='none'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path
+                    d='M10 19.5L3 12.5M3 12.5L10 5.5M3 12.5L21 12.5'
+                    stroke='#333333'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+              </div>
+              <h2 className='text-2xl font-medium text-center text-[#333333]  block'>
+                Reset Password
+              </h2>
+            </div>
+
+            <p className='text-center text-base text-[#333333] mb-6'>
+              Your password must be 6-10 character long.
+            </p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='relative h-[60px]'>
-                <div className='absolute inset-y-0 left-3 flex items-center pointer-events-none'>
-                  <svg
-                    className='w-5 h-5 text-gray-400'
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 20 20'
-                    fill='currentColor'
-                  >
-                    <path
-                      fillRule='evenodd'
-                      d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'
-                      clipRule='evenodd'
-                    />
-                  </svg>
-                </div>
-                <input
-                  type='text'
-                  name='name'
-                  placeholder='Enter Your Name'
-                  className={`w-full h-[60px] placeholder:text-[#5F5F5F] placeholder:font-normal text-lg font-medium pl-10 pr-3 py-2 border ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  } rounded-full focus:outline-none focus:ring-1 focus:ring-gray-400`}
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-                {errors.name && (
-                  <p className='text-red-500 text-xs mt-1 ml-3'>
-                    {errors.name}
-                  </p>
-                )}
-              </div>
-
-              <div className='relative h-[60px]'>
-                <div className='absolute inset-y-0 left-3 flex items-center pointer-events-none'>
-                  <svg
-                    className='w-5 h-5 text-gray-400'
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 20 20'
-                    fill='currentColor'
-                  >
-                    <path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z' />
-                    <path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z' />
-                  </svg>
-                </div>
-                <input
-                  type='text'
-                  name='email'
-                  placeholder='Enter Your Email'
-                  className={`w-full h-[60px] placeholder:text-[#5F5F5F] placeholder:font-normal text-lg font-medium pl-10 pr-3 py-2 border ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  } rounded-full focus:outline-none focus:ring-1 focus:ring-gray-400`}
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-                {errors.email && (
-                  <p className='text-red-500 text-xs mt-1 ml-3'>
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-
               <div className='relative h-[60px]'>
                 <div className='absolute inset-y-0 left-3 flex items-center pointer-events-none'>
                   <svg
@@ -259,21 +220,9 @@ export default function SignUp() {
                 type='submit'
                 className='w-full h-[50px] flex items-center justify-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-[#333333] hover:bg-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black cursor-pointer'
               >
-                Sign Up
+                Confirm
               </button>
             </form>
-
-            <div className='mt-4 text-center text-sm'>
-              <span className='text-[#545454] text-base'>
-                Already have an account?
-              </span>{" "}
-              <Link
-                href='/'
-                className='text-[#333333] font-medium hover:underline'
-              >
-                Sign In
-              </Link>
-            </div>
           </div>
         </div>
 
