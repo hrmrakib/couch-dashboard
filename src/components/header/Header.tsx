@@ -11,9 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const notifications = 3;
+  const router = useRouter();
+
+  const handleLogout = () => {
+    router.push("/signin");
+  };
 
   return (
     <header className='border-b border-gray-100'>
@@ -47,7 +53,9 @@ const Header = () => {
             <DropdownMenuContent align='end'>
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleLogout()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
