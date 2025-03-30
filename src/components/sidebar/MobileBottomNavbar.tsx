@@ -26,7 +26,7 @@ export default function BottomNavbar() {
   const pathname = usePathname();
 
   return (
-    <nav className='fixed bottom-0 left-0 w-full bg-white shadow-md p-2'>
+    <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white shadow-md p-2'>
       <div className='flex overflow-x-auto no-scrollbar gap-4 px-2'>
         {menuItems.map((item, index) => (
           <Link
