@@ -19,41 +19,52 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
+import { useCreateProductMutation } from "@/redux/features/product/ProductAPI";
 
 type ProductFormData = {
   name: string;
   category: string;
   roomType: string;
-  stock: string;
+  stock: number;
   size: string;
-  materials: string;
+  materials: [];
   height: string;
   width: string;
   length: string;
   description: string;
-  buyingPrice: string;
+  price: number;
+  rating: number;
   rentalPrice: string;
+  color: string;
+  isRentable: boolean;
+  isBuyable: boolean;
 };
 
 export default function AddProductForm() {
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [createProduct] = useCreateProductMutation();
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     category: "",
     roomType: "",
-    stock: "",
+    stock: 0,
     size: "",
-    materials: "",
+    materials: [],
     height: "",
     width: "",
     length: "",
     description: "",
-    buyingPrice: "",
+    price: 0,
+    rating: 0,
     rentalPrice: "",
+    color: "",
+    isRentable: false,
+    isBuyable: false,
   });
 
   const handleInputChange = (
@@ -99,11 +110,64 @@ export default function AddProductForm() {
     fileInputRef.current?.click();
   };
 
+  /*
+  
+  {
+            API/ backend needed:
+
+            "_id": "67ea59bc904b6d7b5436a0d1",
+            "name": "Modern Velvet Couch",
+            "images": [
+                "/images/resized/modern-velvet-couch-1743411644659.jpg"
+            ],
+            "description": "A stylish 3-seater velvet couch, perfect for modern living rooms. Comes with throw pillows.",
+            "price": 15,
+            "isRentable": true,
+            "isBuyable": false,
+            "stock": 10,
+            "notes": [],
+            "rating": 2,
+            "createdAt": "2025-03-31T09:00:44.685Z",
+            "updatedAt": "2025-04-03T12:53:06.048Z",
+            "materials": [],
+            "rentPrice": 0,
+            "color": "red"
+        }
+
+
+        ------------------------------------------------------------------------------------------------------------------
+
+        My sended data:
+         
+        name: "Sharif Miya"
+        images: (2) ["/images/resized/modern-velvet-couch-1743411644659.jpg"]
+        description: "You can customize offsets through offset and mobileOffset props. Default desktop offset is 32px and default mobile offset is 16px"
+        price: "10"
+        "isRentable": true,
+        "isBuyable": false,
+        stock: "10"
+        +-----> notes: []
+        rating: 2
+        materials: "15"
+        rentalPrice: "55"
+        color: "red"
+
+        
+        category: "Chair"
+        height: "12"
+        length: "6" 
+        roomType: "Big"
+        size: "10"
+        width: "158"
+  
+  
+  */
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     // Validate form
-    if (!formData.name || !formData.buyingPrice || images.length === 0) {
+    if (!formData.name || !formData.price || images.length === 0) {
       alert({
         title: "Missing required fields",
         description:
@@ -121,11 +185,6 @@ export default function AddProductForm() {
 
     // Log the data (in a real app, you would send this to an API)
     console.log("Product data:", productData);
-
-    alert({
-      title: "Product saved",
-      description: "Your product has been saved successfully.",
-    });
   };
 
   return (
@@ -211,7 +270,7 @@ export default function AddProductForm() {
             {formData.description || "Product Description"}
           </p>
           <p className='text-lg font-light text-gray-400 mt-2'>
-            $ {formData.buyingPrice || "00.00"}
+            $ {formData.price || "00.00"}
           </p>
         </div>
 
@@ -270,6 +329,23 @@ export default function AddProductForm() {
 
           <div>
             <Label
+              htmlFor='color'
+              className='text-[#333333] text-base font-medium mb-1.5'
+            >
+              Color
+            </Label>
+            <Input
+              id='color'
+              name='color'
+              placeholder='Enter color'
+              value={formData.color}
+              onChange={handleInputChange}
+              className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
+            />
+          </div>
+
+          <div>
+            <Label
               htmlFor='stock'
               className='text-[#333333] text-base font-medium mb-1.5'
             >
@@ -297,7 +373,7 @@ export default function AddProductForm() {
               id='size'
               name='size'
               type='number'
-              placeholder='Enter room type'
+              placeholder='Enter size'
               value={formData.size}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
@@ -314,12 +390,48 @@ export default function AddProductForm() {
             <Input
               id='materials'
               name='materials'
-              type='number'
-              placeholder='Enter category name'
+              type='text'
+              placeholder='Enter materials'
               value={formData.materials}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
             />
+          </div>
+
+          <div>
+            <Label
+              htmlFor='Rental / Buyable'
+              className='text-[#333333] text-base font-medium mb-1.5'
+            >
+              Type
+            </Label>
+
+            <RadioGroup
+              defaultValue='isRentable'
+              className='py-2.5 flex items-center space-x-6'
+            >
+              <div className='flex items-center space-x-2'>
+                <RadioGroupItem value='isRentable' id='r1' />
+                <Label htmlFor='r1' className='text-base'>
+                  Rentable
+                </Label>
+              </div>
+              <div className='flex items-center space-x-2'>
+                <RadioGroupItem value='isBuyable' id='r2' />
+                <Label htmlFor='r2' className='text-base'>
+                  Buyable
+                </Label>
+              </div>
+            </RadioGroup>
+            {/* <Input
+              id='rendBuy'
+              name='rendBuy'
+              type='number'
+              placeholder='Enter category name'
+              value={formData.rendBuy}
+              onChange={handleInputChange}
+              className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
+            /> */}
           </div>
         </div>
 
@@ -336,7 +448,7 @@ export default function AddProductForm() {
               id='height'
               name='height'
               type='number'
-              placeholder='Enter room type'
+              placeholder='Enter height'
               value={formData.height}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
@@ -348,13 +460,13 @@ export default function AddProductForm() {
               htmlFor='width'
               className='text-[#333333] text-base font-medium mb-1.5'
             >
-              With
+              Width
             </Label>
             <Input
               id='width'
               name='width'
               type='number'
-              placeholder='Enter room type'
+              placeholder='Enter width'
               value={formData.width}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
@@ -372,7 +484,7 @@ export default function AddProductForm() {
               id='length'
               name='length'
               type='number'
-              placeholder='Enter category name'
+              placeholder='Enter length'
               value={formData.length}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
@@ -402,17 +514,17 @@ export default function AddProductForm() {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
           <div>
             <Label
-              htmlFor='buyingPrice'
+              htmlFor='price'
               className='text-[#333333] text-base font-medium mb-1.5'
             >
               Price (For Buying)
             </Label>
             <Input
-              id='buyingPrice'
-              name='buyingPrice'
+              id='price'
+              name='price'
               type='number'
               placeholder='$00.00'
-              value={formData.buyingPrice}
+              value={formData.price}
               onChange={handleInputChange}
               className='py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide'
             />

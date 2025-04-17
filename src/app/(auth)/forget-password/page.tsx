@@ -5,6 +5,8 @@ import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSendOtpMutation } from "@/redux/features/auth/Authentication";
+import { toast } from "sonner";
 
 export default function SignUp() {
   const router = useRouter();
@@ -14,6 +16,9 @@ export default function SignUp() {
   const [errors, setErrors] = useState({
     email: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [forgetPassword] = useSendOtpMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,8 +33,9 @@ export default function SignUp() {
     return re.test(email);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const newErrors = {
       name: "",
@@ -55,8 +61,18 @@ export default function SignUp() {
       // In a real app, you would handle registration here
       console.log("Registration with:", formData);
 
-      // Simulate successful registration
-      router.push("/dashboard");
+      const response = await forgetPassword(formData).unwrap();
+      console.log(response);
+
+      if (response?.success) {
+        setIsLoading(false);
+        localStorage.setItem("email", formData.email);
+        setFormData({ email: "" });
+        toast.success(response?.message, {
+          duration: 3000,
+        });
+        router.push("/verify");
+      }
     }
   };
 
@@ -105,10 +121,16 @@ export default function SignUp() {
               </div>
 
               <button
+                aria-busy={isLoading}
+                disabled={isLoading}
                 type='submit'
-                className='w-full h-[50px] flex items-center justify-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-[#333333] hover:bg-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black cursor-pointer'
+                className={`w-full h-[50px] flex items-center justify-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-[#333333] hover:bg-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black cursor-pointer ${
+                  isLoading
+                    ? "cursor-not-allowed opacity-70 disabled:cursor-not-allowed"
+                    : "hover:bg-[#1a1a1a] cursor-pointer"
+                }`}
               >
-                Send OTP
+                {isLoading ? "Sending OTP..." : "Send OTP"}
               </button>
             </form>
 

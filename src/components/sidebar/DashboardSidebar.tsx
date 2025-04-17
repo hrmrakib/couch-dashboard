@@ -22,9 +22,12 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 export default function DashboardSidebar() {
+
+  const router = useRouter()
+
   const pathname = usePathname();
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", href: "/", active: true },
@@ -43,6 +46,16 @@ export default function DashboardSidebar() {
   // const isActive = (href: string) => pathname === href;
 
   console.log(pathname);
+
+  
+
+
+  const handleLogout = ()=>{
+    alert('logout')
+    localStorage.removeItem('accessToken')
+    router.push('/signin')
+    
+  }
 
   return (
     <Sidebar>
@@ -77,6 +90,8 @@ export default function DashboardSidebar() {
       </SidebarContent>
       <SidebarFooter className='border-t border-gray-100 p-4'>
         <Button
+        // onClick={handleLogout}
+        onClick={handleLogout}
           variant='destructive'
           className='w-full flex items-center gap-2'
           size='sm'

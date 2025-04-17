@@ -5,24 +5,26 @@ import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useLoginMutation } from "@/redux/features/auth/Authentication";
+import { useRegisterMutation } from "@/redux/features/auth/Authentication";
 import { toast } from "sonner";
 
-export default function SignIn() {
+export default function SignUp() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,7 +41,6 @@ export default function SignIn() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
 
     const newErrors = {
@@ -48,6 +49,10 @@ export default function SignIn() {
       password: "",
       confirmPassword: "",
     };
+
+    if (!formData.name) {
+      newErrors.name = "Name is required";
+    }
 
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -75,15 +80,14 @@ export default function SignIn() {
     ) {
       // In a real app, you would handle registration here
       const data = {
+        name: formData.name,
         email: formData.email,
         password: formData.password,
       };
 
       console.log("Registration with:", data);
 
-      const res = await login(data).unwrap();
-
-      console.log({ res });
+      const res = await register(data).unwrap();
 
       if (res?.error) {
         toast.error(res.message);
@@ -91,15 +95,19 @@ export default function SignIn() {
         return;
       }
       if (res?.success) {
-
-        console.log('success')
         toast.success(res.message);
-        localStorage.setItem("accessToken", res?.data?.token);
+        localStorage.setItem("email", JSON.stringify(formData.email));
         setLoading(false);
-        router.push("/");
       }
+
+      console.log({ res });
+
+      // Simulate successful registration
+      router.push("/verify");
     }
   };
+
+  console.log(formData);
 
   return (
     <div className='min-h-screen bg-[url("/auth/bg.png")] bg-cover bg-center flex items-center justify-center p-4'>
@@ -109,10 +117,42 @@ export default function SignIn() {
         <div className='w-full md:w-1/2 h-[626px] flex flex-col items-center justify-center bg-[#FFFFFF] rounded-lg p-2 max-w-[660px] shadow-lg'>
           <div className='w-[80%] mx-auto'>
             <h2 className='text-2xl font-medium text-center text-[#333333] mb-6 block'>
-              Sign In
+              Create Account
             </h2>
 
             <form onSubmit={handleSubmit} className='space-y-6'>
+              <div className='relative h-[60px]'>
+                <div className='absolute inset-y-0 left-3 flex items-center pointer-events-none'>
+                  <svg
+                    className='w-5 h-5 text-gray-500'
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 20 20'
+                    fill='currentColor'
+                  >
+                    <path
+                      fillRule='evenodd'
+                      d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z'
+                      clipRule='evenodd'
+                    />
+                  </svg>
+                </div>
+                <input
+                  type='text'
+                  name='name'
+                  placeholder='Enter Your Name'
+                  className={`w-full h-[60px] placeholder:text-[#5F5F5F] placeholder:font-normal text-lg font-medium pl-10 pr-3 py-2 border ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  } rounded-full focus:outline-none focus:ring-1 focus:ring-gray-400`}
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <p className='text-red-500 text-xs mt-1 ml-3'>
+                    {errors.name}
+                  </p>
+                )}
+              </div>
+
               <div className='relative h-[60px]'>
                 <div className='absolute inset-y-0 left-3 flex items-center pointer-events-none'>
                   <svg
@@ -253,19 +293,19 @@ export default function SignIn() {
                     : "hover:bg-[#1a1a1a] cursor-pointer"
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black`}
               >
-                {loading ? "Try to sign in..." : "Sign In"}
+                {loading ? "Creating your account..." : "Create Account"}
               </button>
             </form>
 
             <div className='mt-4 text-center text-sm'>
               <span className='text-[#545454] text-base'>
-                Don\t have an account?{" "}
+                Already have an account?
               </span>{" "}
               <Link
-                href='/signup'
+                href='/'
                 className='text-[#333333] font-medium hover:underline'
               >
-                Sign Up
+                Sign In
               </Link>
             </div>
           </div>
