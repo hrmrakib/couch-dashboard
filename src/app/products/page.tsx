@@ -389,7 +389,7 @@ export default function ProductsPage() {
   const [pageInput, setPageInput] = useState("1");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const { data, isLoading, isError } = useGetProductsQuery({
+  const { data, isLoading, isError ,refetch} = useGetProductsQuery({
     page: currentPage,
   });
 
@@ -425,9 +425,10 @@ export default function ProductsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await deleteProduct(id).unwrap();
-      toast.success(res. "Product deleted successfully");
+      await deleteProduct(id).unwrap();
+      toast.success("Product deleted successfully");
       setActiveDropdown(null);
+      refetch()
     } catch (error) {
       toast.error("Failed to delete product");
     }
@@ -454,6 +455,8 @@ export default function ProductsPage() {
       </div>
     );
   }
+
+  console.log(filteredProducts, "filteredProducts");
 
   return (
     <div className="container mx-auto p-4">
@@ -524,13 +527,13 @@ export default function ProductsPage() {
               className="bg-white rounded-md overflow-hidden shadow-md"
             >
               <div className="relative h-[200px] w-full bg-[#F5F5F5]">
-                {/* <Image
-                  src={product.images?.[0] ? `${process.env.NEXT_PUBLIC_API_URL}${product.images[0]}` : "/placeholder.svg"}
+                <Image
+                  src={product.images?.[0] ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${product.images[0]}` : "/placeholder.svg"}
                   alt={product.name}
                   fill
                   className='object-contain p-4'
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                /> */}
+                />
               </div>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-2">

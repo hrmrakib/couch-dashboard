@@ -9,7 +9,7 @@ interface FilterTabsProps {
   counts: {
     all: number;
     pending: number;
-    confirm: number;
+    success: number;
     cancel: number;
   };
 }
@@ -22,7 +22,7 @@ export default function FilterTabs({
   const tabs = [
     { id: "all", label: "All", count: counts.all },
     { id: "pending", label: "Pending", count: counts.pending },
-    { id: "confirm", label: "Confirm", count: counts.confirm },
+    { id: "success", label: "success", count: counts.success },
     { id: "cancel", label: "Cancel", count: counts.cancel },
   ];
 
@@ -39,7 +39,7 @@ export default function FilterTabs({
                 ? "bg-gray-800 text-white"
                 : tab.id === "pending"
                 ? "bg-blue-100 text-blue-600"
-                : tab.id === "confirm"
+                : tab.id === "success"
                 ? "bg-green-100 text-green-600"
                 : "bg-red-100 text-red-600"
               : "bg-white text-gray-600 hover:bg-gray-100"

@@ -19,13 +19,16 @@ export default function ProductCard({
     pending: "bg-blue-100 text-blue-600",
     confirm: "bg-green-100 text-green-600",
     cancel: "bg-red-100 text-red-600",
+    success: "bg-green-100 text-green-600",
   };
+
+  const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL
 
   return (
     <div className='bg-white rounded-lg overflow-hidden shadow-sm'>
       <div className='relative aspect-square'>
         <Image
-          src={image || "/placeholder.svg"}
+          src={ `${IMAGE}${image}` || "/placeholder.svg"}
           alt={name}
           fill
           className='object-cover'

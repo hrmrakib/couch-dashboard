@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { useBundlesGetQuery } from "@/redux/features/bundles/bundlesApi";
 
 // Sample data for bundles
 const bundleItems = [
@@ -46,6 +47,9 @@ export default function BundlePage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const router = useRouter();
+
+  const {data}  =useBundlesGetQuery(undefined)
+  console.log("Bundles data", data);
 
   const totalPages = 12; // Hardcoded for demo
 
