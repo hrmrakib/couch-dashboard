@@ -3,7 +3,7 @@ import { Product } from "./../../../lib/types";
 
 const ProductAPI = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<Product[], void>({
+    getProducts: builder.query({
       query: () => "/products",
     }),
 
@@ -11,7 +11,7 @@ const ProductAPI = baseAPI.injectEndpoints({
       query: (id) => `/products/${id}`,
     }),
 
-    createProduct: builder.mutation<Product, Partial<Product>>({
+    createProduct: builder.mutation({
       query: (body) => ({
         url: "/admin/products/create",
         method: "POST",
@@ -27,8 +27,12 @@ const ProductAPI = baseAPI.injectEndpoints({
     }),
     deleteProduct: builder.mutation<void, string>({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: `/admin/products/${id}/delete`,
+        // /admin/products/{{productId}}/delete
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        }
       }),
     }),
   }),
