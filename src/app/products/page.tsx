@@ -350,7 +350,6 @@ import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -389,7 +388,7 @@ export default function ProductsPage() {
   const [pageInput, setPageInput] = useState("1");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const { data, isLoading, isError ,refetch} = useGetProductsQuery({
+  const { data, isLoading, isError, refetch } = useGetProductsQuery({
     page: currentPage,
   });
 
@@ -417,18 +416,18 @@ export default function ProductsPage() {
     }
   };
 
-  const handleEdit = (id: string) => {
-    console.log(`Edit product ${id}`);
-    alert(`Edit product ${id}`);
-    setActiveDropdown(null);
-  };
+  // const handleEdit = (id: string) => {
+  //   console.log(`Edit product ${id}`);
+  //   alert(`Edit product ${id}`);
+  //   setActiveDropdown(null);
+  // };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteProduct(id).unwrap();
       toast.success("Product deleted successfully");
       setActiveDropdown(null);
-      refetch()
+      refetch();
     } catch (error) {
       toast.error("Failed to delete product");
     }
@@ -528,10 +527,14 @@ export default function ProductsPage() {
             >
               <div className="relative h-[200px] w-full bg-[#F5F5F5]">
                 <Image
-                  src={product.images?.[0] ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${product.images[0]}` : "/placeholder.svg"}
+                  src={
+                    product.images?.[0]
+                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${product.images[0]}`
+                      : "/placeholder.svg"
+                  }
                   alt={product.name}
                   fill
-                  className='object-contain p-4'
+                  className="object-contain p-4"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
@@ -577,12 +580,14 @@ export default function ProductsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem
-                          onClick={() => handleEdit(product._id)}
-                          className="cursor-pointer"
-                        >
-                          Edit
-                        </DropdownMenuItem>
+                        <Link href={`/products/${product._id}`}>
+                          <DropdownMenuItem
+                            // onClick={() => handleEdit(product._id)}
+                            className="cursor-pointer"
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem
                           onClick={() => handleDelete(product._id)}
                           className="text-red-500 cursor-pointer"

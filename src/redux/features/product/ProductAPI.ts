@@ -1,5 +1,5 @@
 import baseAPI from "@/redux/api/baseAPI";
-import { Product } from "./../../../lib/types";
+
 
 const ProductAPI = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
@@ -7,7 +7,7 @@ const ProductAPI = baseAPI.injectEndpoints({
       query: () => "/products",
     }),
 
-    getProductById: builder.query<Product, string>({
+    getProductById: builder.query({
       query: (id) => `/products/${id}`,
     }),
 
@@ -18,13 +18,24 @@ const ProductAPI = baseAPI.injectEndpoints({
         body,
       }),
     }),
-    updateProduct: builder.mutation<Product, Partial<Product>>({
-      query: ({ id, ...body }) => ({
-        url: `/products/${id}`,
-        method: "PUT",
-        body,
+    updateProduct: builder.mutation({ 
+      query: ({ id, formData }) => ({
+        url: `/admin/products/${id}/edit`,
+        method: "PATCH",
+        body: formData,
       }),
+      invalidatesTags: ["Products"],
     }),
+
+    // bundleEdit: builder.mutation({
+    //   query: ({ id, formData }) => ({
+    //     url: `/admin/bundles/${id}/edit`,
+    //     method: "PATCH",
+    //     body: formData
+    //   }),
+    //     invalidatesTags: ["Bundles"],
+    // }),
+
     deleteProduct: builder.mutation<void, string>({
       query: (id) => ({
         url: `/admin/products/${id}/delete`,
@@ -32,7 +43,7 @@ const ProductAPI = baseAPI.injectEndpoints({
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        }
+        },
       }),
     }),
   }),
