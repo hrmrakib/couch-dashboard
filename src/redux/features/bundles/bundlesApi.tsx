@@ -7,7 +7,16 @@ const bundlesApi = baseAPI.injectEndpoints({
         url: "/bundles",
         method: "GET",
       }),
-        providesTags: ["Bundles"],
+      providesTags: ["Bundles"],
+    }),
+
+    bundleCreate: builder.mutation({
+      query: (formData) => ({
+        url: "/admin/bundles/create",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Bundles"],
     }),
 
     bundlesGetById: builder.query({
@@ -15,26 +24,31 @@ const bundlesApi = baseAPI.injectEndpoints({
         url: `/bundles/${id}`,
         method: "GET",
       }),
-        providesTags: ["Bundles"],
+      providesTags: ["Bundles"],
     }),
 
     bundleEdit: builder.mutation({
       query: ({ id, formData }) => ({
         url: `/admin/bundles/${id}/edit`,
         method: "PATCH",
-        body: formData
+        body: formData,
       }),
-        invalidatesTags: ["Bundles"],
+      invalidatesTags: ["Bundles"],
     }),
     deleteBundle: builder.mutation({
       query: (id) => ({
         url: `/admin/bundles/${id}/delete`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Bundles"]
-    })
-
+      invalidatesTags: ["Bundles"],
+    }),
   }),
 });
 
-export const { useBundlesGetQuery, useBundlesGetByIdQuery, useBundleEditMutation , useDeleteBundleMutation} = bundlesApi;
+export const {
+  useBundlesGetQuery,
+  useBundlesGetByIdQuery,
+  useBundleEditMutation,
+  useDeleteBundleMutation,
+  useBundleCreateMutation
+} = bundlesApi;

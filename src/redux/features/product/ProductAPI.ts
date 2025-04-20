@@ -7,6 +7,10 @@ const ProductAPI = baseAPI.injectEndpoints({
       query: () => "/products",
     }),
 
+    allList: builder.query({
+      query: () => "/admin/products",
+    }),
+
     getProductById: builder.query({
       query: (id) => `/products/${id}`,
     }),
@@ -55,4 +59,5 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useAllListQuery
 } = ProductAPI;
