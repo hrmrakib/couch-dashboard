@@ -469,7 +469,7 @@ const productItems = [
   { id: 5, name: "Rolling Desk", image: "/product/5.png" },
   { id: 6, name: "Cabinet", image: "/product/6.png" },
   { id: 7, name: "Chair", image: "/product/7.png" },
-  { id: 8, name: "Table", image: "/product/8.png" },
+    { id: 8, name: "Table", image: "/product/8.png" },
 ];
 
 interface BundleItem {
@@ -537,7 +537,7 @@ export default function BundlePage() {
   const filteredProducts = productItems.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+console.log(filteredProducts, "filteredProducts")
   // Handle toggling product selection
   const toggleProductSelection = (productId: string) => {
     setSelectedProducts((prev) => {

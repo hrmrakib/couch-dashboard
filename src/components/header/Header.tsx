@@ -30,7 +30,7 @@ const Header = () => {
     <header className="border-b border-gray-100">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="hidden md:block">
-          <h1 className="text-lg md:text-2xl font-semibold">Welcome, Sharon</h1>
+          <h1 className="text-lg md:text-2xl font-semibold">Welcome, {data?.data?.name}</h1>
           <p className="text-base text-[#404040]">Have a nice day</p>
         </div>
         <div className="flex items-center gap-4">
