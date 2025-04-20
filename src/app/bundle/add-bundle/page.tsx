@@ -168,6 +168,7 @@ export default function BundleCreator() {
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Failed to create bundle:", error);
       setError(error.message || "Failed to create bundle");

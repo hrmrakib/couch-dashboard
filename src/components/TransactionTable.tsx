@@ -106,14 +106,14 @@ export function TransactionTable() {
 
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="bg-black text-white">
         <TableRow>
-          <TableHead>User</TableHead>
-          <TableHead>Transaction ID</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Payment Method</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Date</TableHead>
+          <TableHead className="text-white">User</TableHead>
+          <TableHead className="text-white">Transaction ID</TableHead>
+          <TableHead className="text-white">Amount</TableHead>
+          <TableHead className="text-white">Payment Method</TableHead>
+          <TableHead className="text-white">Type</TableHead>
+          <TableHead className="text-white">Date</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
