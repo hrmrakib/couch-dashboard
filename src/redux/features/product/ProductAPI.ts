@@ -40,6 +40,16 @@ const ProductAPI = baseAPI.injectEndpoints({
     //     invalidatesTags: ["Bundles"],
     // }),
 
+    createVariant: builder.mutation({
+      query: ({ id, formData }: { id: string; formData: FormData }) => ({
+        url: `/admin/products/${id}/variant`,
+        // /admin/products/{{productId}}/variant
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Products"],
+    }),
+
     deleteProduct: builder.mutation<void, string>({
       query: (id) => ({
         url: `/admin/products/${id}/delete`,
@@ -49,6 +59,7 @@ const ProductAPI = baseAPI.injectEndpoints({
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
+      invalidatesTags: ["Products"],
     }),
   }),
 });
@@ -59,5 +70,6 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useCreateVariantMutation,
   useAllListQuery
 } = ProductAPI;

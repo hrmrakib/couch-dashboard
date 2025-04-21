@@ -595,6 +595,9 @@ export default function ProductsPage() {
                         >
                           Delete
                         </DropdownMenuItem>
+                        <Link href={`/products/add-variants/${product._id}`}>
+                          <DropdownMenuItem>Variant</DropdownMenuItem>
+                        </Link>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

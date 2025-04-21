@@ -219,7 +219,7 @@ export default function Dashboard() {
                           Total Sell
                         </p>
                         <h3 className="text-2xl md:text-5xl text-[#1A1918] font-bold">
-                          ${totalTransactions.sells}
+                          ${totalTransactions?.sells}
                         </h3>
                       </div>
                     </CardContent>
@@ -232,7 +232,7 @@ export default function Dashboard() {
                           Total Buy
                         </p>
                         <h3 className="text-2xl md:text-5xl text-[#1A1918] font-bold">
-                          ${totalTransactions.buys}
+                          ${totalTransactions?.buys}
                         </h3>
                       </div>
                     </CardContent>
@@ -245,7 +245,7 @@ export default function Dashboard() {
                           Total Earnings
                         </p>
                         <h3 className="text-2xl md:text-5xl text-[#1A1918] font-bold">
-                          ${totalTransactions.earnings}
+                          ${totalTransactions?.earnings}
                         </h3>
                       </div>
                     </CardContent>

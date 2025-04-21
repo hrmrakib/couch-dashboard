@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
-import { useCreateProductMutation } from "@/redux/features/product/ProductAPI";
-import { useRouter } from "next/navigation";
+import {  useCreateVariantMutation } from "@/redux/features/product/ProductAPI";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type ProductFormData = {
@@ -23,36 +23,38 @@ type ProductFormData = {
   width: string;
   length: string;
   description: string;
-  price: number;
+  price?: number;
   rating: number;
-  rentalPrice: string;
+  rentalPrice?: number;
   color: string;
   isRentable: boolean;
   isBuyable: boolean;
 };
 
-export default function AddProductForm() {
+export default function CreateVariant() {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]); // Changed to store File objects
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [createProduct] = useCreateProductMutation();
+  const [createVariant] = useCreateVariantMutation();
   const [newMaterial, setNewMaterial] = useState("");
+  const params = useParams()
+  console.log(params.id)
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     category: "",
     roomType: "",
-    stock: 0,
+    stock: 1,
     size: "",
     materials: [],
     height: "",
     width: "",
     length: "",
     description: "",
-    price: 0,
-    rating: 1, // Changed default to 1 to meet validation
-    rentalPrice: "",
+    price: undefined,
+    rating: 1, 
+    rentalPrice: undefined,
     color: "",
     isRentable: false,
     isBuyable: false,
@@ -123,14 +125,15 @@ export default function AddProductForm() {
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("stock", formData.stock.toString());
-    formDataToSend.append("price", formData.price.toString());
+    formDataToSend.append("price", (formData.price ?? 0).toString());
     formDataToSend.append("rating", formData.rating.toString());
     formDataToSend.append("color", formData.color);
     formDataToSend.append("size", formData.size);
     formDataToSend.append("materials", JSON.stringify(formData.materials));
     formDataToSend.append("category", formData.category);
     formDataToSend.append("roomType", formData.roomType);
-    formDataToSend.append("rentalPrice", formData.rentalPrice);
+    formDataToSend.append("rentalPrice", (formData.rentalPrice ?? 0).toString());
+    formDataToSend.append('refProduct', params.id as string);
     formDataToSend.append("height", formData.height);
     formDataToSend.append("width", formData.width);
     formDataToSend.append("length", formData.length);
@@ -143,12 +146,13 @@ export default function AddProductForm() {
     });
 
     try {
-      const res = await createProduct(formDataToSend).unwrap();
+      const res = await createVariant({formData:formDataToSend, id: (params.id as string)} ).unwrap();
       console.log("Product created successfully", res);
 
-      toast.success(res?.message ||"Product created successfully!");
 
       router.push("/products");
+        toast.success(res?.message || "Product created successfully!");
+        // window.location.reload();
     } catch (error) {
       console.error("Failed to create product:", error);
     }
@@ -321,9 +325,12 @@ export default function AddProductForm() {
               id="stock"
               name="stock"
               type="number"
+              min={1}
               placeholder="Enter stock quantity"
-              value={formData.stock}
-              onChange={(e) => handleNumberInputChange(e, "stock")}
+              defaultValue={formData.stock}
+              onChange={(e) => {
+                handleNumberInputChange(e, "stock")
+              }}
               className="py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide"
             />
           </div>
@@ -515,7 +522,7 @@ export default function AddProductForm() {
               name="price"
               type="number"
               placeholder="$00.00"
-              value={formData.price}
+              defaultValue={formData.price}
               onChange={(e) => handleNumberInputChange(e, "price")}
               className="py-2.5 px-2 md:text-lg border border-gray-200 rounded-md placeholder:text-[#545454] placeholder:text-base tracking-wide"
             />
@@ -545,54 +552,12 @@ export default function AddProductForm() {
 
         {/* Action Buttons */}
         <div className="flex justify-end gap-4">
-          <Link
-            href="/products/add-variants"
-            className="h-14 text-[#101010] text-lg font-medium py-2.5 px-4 border border-[#101010] rounded-md flex items-center gap-2"
-          >
-            <span> Add Variant </span>
-            <svg
-              width="25"
-              height="24"
-              viewBox="0 0 25 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.75 3.75H6.25C5.14543 3.75 4.25 4.64543 4.25 5.75V8.25C4.25 9.35457 5.14543 10.25 6.25 10.25H8.75C9.85457 10.25 10.75 9.35457 10.75 8.25V5.75C10.75 4.64543 9.85457 3.75 8.75 3.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M17.5 3.75V7M17.5 7V10.25M17.5 7H14.25M17.5 7H20.75"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.75 13.75H6.25C5.14543 13.75 4.25 14.6454 4.25 15.75V18.25C4.25 19.3546 5.14543 20.25 6.25 20.25H8.75C9.85457 20.25 10.75 19.3546 10.75 18.25V15.75C10.75 14.6454 9.85457 13.75 8.75 13.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M18.75 13.75H16.25C15.1454 13.75 14.25 14.6454 14.25 15.75V18.25C14.25 19.3546 15.1454 20.25 16.25 20.25H18.75C19.8546 20.25 20.75 19.3546 20.75 18.25V15.75C20.75 14.6454 19.8546 13.75 18.75 13.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
-
+       
           <Button
             type="submit"
             className="h-14 w-[200px] text-[#FFFFFF] text-lg font-medium bg-[#101010] cursor-pointer"
           >
-            Save Product
+           Add Variant
           </Button>
         </div>
       </form>
