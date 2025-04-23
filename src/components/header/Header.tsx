@@ -26,8 +26,11 @@ const Header = () => {
     router.push("/signin");
   };
 
+  const IMAGE =process.env.NEXT_PUBLIC_IMAGE_URL;
+  const AVATAR = IMAGE + data?.data?.avatar;
   return (
     <header className="border-b border-gray-100">
+      
       <div className="flex items-center justify-between px-6 py-4">
         <div className="hidden md:block">
           <h1 className="text-lg md:text-2xl font-semibold">Welcome, {data?.data?.name}</h1>
@@ -49,7 +52,7 @@ const Header = () => {
               <Button variant="ghost" className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={data?.data?.avatar}
+                    src={AVATAR}
                     sizes="48px"
                     alt="Sharon"
                   />

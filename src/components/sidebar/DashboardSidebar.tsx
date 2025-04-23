@@ -91,7 +91,7 @@ export default function DashboardSidebar() {
           // onClick={handleLogout}
           onClick={handleLogout}
           variant="destructive"
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center cursor-pointer gap-2"
           size="sm"
         >
           <LogOut className="h-4 w-4" />
