@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserProfileQuery } from "@/redux/features/userApi/userSlice";
 import Link from "next/link";
+import { logout } from "@/service/authService";
+import { toast } from "sonner";
 
 const Header = () => {
   const notifications = 3;
@@ -22,7 +24,10 @@ const Header = () => {
   const { data } = useUserProfileQuery(undefined);
   // console.log(data?.data);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    localStorage.removeItem("accessToken");
+    await logout()
+    toast.success("Logout successfully");
     router.push("/signin");
   };
 
