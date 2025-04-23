@@ -100,7 +100,13 @@ export default function SignIn() {
         router.push("/");
       }
     }
+    else {
+      setLoading(false);
+      return;
+      toast.error("Please fill in all fields correctly.");
+    }
   };
+  console.log(loading)
 
   return (
     <div className='min-h-screen bg-[url("/auth/bg.png")] bg-cover bg-center flex items-center justify-center p-4'>
@@ -246,7 +252,7 @@ export default function SignIn() {
 
               <button
                 type="submit"
-                aria-busy={loading}
+                // aria-busy={loading}
                 disabled={loading}
                 className={`w-full h-[50px] flex items-center justify-center py-2 px-4 rounded-full shadow-sm text-sm font-medium text-white bg-[#333333] transition-colors duration-200 ${
                   loading
