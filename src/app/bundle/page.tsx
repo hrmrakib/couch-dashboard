@@ -56,7 +56,6 @@
 
 //   const {data:list} =useAllListQuery({})
 
-
 //   const totalPages = Math.ceil((data?.data?.length || 0) / 10) || 1; // Calculate based on data length
 
 //   // Handle page change
@@ -86,7 +85,7 @@
 //   // Handle actual delete
 //   const handleConfirmDelete = async () => {
 //     if (!selectedItemId) return;
-    
+
 //     try {
 //       const res = await deleteBundle(selectedItemId).unwrap();
 //       toast.success(res?.message || "Bundle deleted successfully");
@@ -419,6 +418,7 @@ import { toast } from "sonner";
 import { useAllListQuery } from "@/redux/features/product/ProductAPI";
 import { addToProduct } from "@/redux/features/storeSlice/storeSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Loading from "@/components/loading/Loading";
 
 interface BundleItem {
   _id: string;
@@ -443,7 +443,7 @@ export default function BundlePage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const router = useRouter();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   interface RootState {
     store: {
       products: {
@@ -451,14 +451,29 @@ export default function BundlePage() {
         name: string;
         image: string;
       }[];
-    }
+    };
   }
   const storeData = useSelector((state: RootState) => state.store.products);
 
-
-  const { data } = useBundlesGetQuery(undefined);
+  const { data, isLoading, isError } = useBundlesGetQuery(undefined);
   const [deleteBundle] = useDeleteBundleMutation();
   const { data: list } = useAllListQuery({});
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return (
+      <div className='flex min-h-screen bg-white w-full'>
+        <main className='flex-1 p-6'>
+          <div className='flex justify-center items-center h-full text-red-500'>
+            <p>Error loading bundle data</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const totalPages = Math.ceil((data?.data?.length || 0) / 10) || 1;
 
@@ -493,7 +508,7 @@ export default function BundlePage() {
 
   const handleConfirmDelete = async () => {
     if (!selectedItemId) return;
-    
+
     try {
       const res = await deleteBundle(selectedItemId).unwrap();
       toast.success(res?.message || "Bundle deleted successfully");
@@ -505,9 +520,10 @@ export default function BundlePage() {
   };
 
   // Filter products based on search query
-  const filteredProducts = list?.data?.filter((product: ProductItem) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const filteredProducts =
+    list?.data?.filter((product: ProductItem) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
 
   // Handle toggling product selection
   const toggleProductSelection = (productId: string) => {
@@ -515,7 +531,7 @@ export default function BundlePage() {
       const newSelection = prev.includes(productId)
         ? prev.filter((id) => id !== productId)
         : [...prev, productId];
-      
+
       // Save to localStorage immediately
       // localStorage.setItem("selectedProductsForBundle", JSON.stringify(newSelection));
       return newSelection;
@@ -535,17 +551,17 @@ export default function BundlePage() {
   const handleNext = () => {
     // Save selected products to localStorage before navigation
     // localStorage.setItem("selectedProductsForBundle", JSON.stringify(selectedProducts));
-    
+
     // Find the selected products from the filteredProducts list
-    const selectedProductDetails = selectedProducts.map(productId => {
+    const selectedProductDetails = selectedProducts.map((productId) => {
       const product = list?.data?.find((p: ProductItem) => p._id === productId);
       return {
-        id: product?._id || '',
-        name: product?.name || '',
-        image: product?.images?.[0] || ''
+        id: product?._id || "",
+        name: product?.name || "",
+        image: product?.images?.[0] || "",
       };
     });
-    
+
     dispatch(addToProduct(selectedProductDetails));
     router.push("/bundle/add-bundle");
   };
@@ -553,66 +569,66 @@ export default function BundlePage() {
   const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
 
   return (
-    <div className="container mx-auto py-6">
+    <div className='container mx-auto py-6'>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          <h1 className="text-xl md:text-[32px] text-[#101010] font-medium">
+      <div className='flex items-center justify-between mb-6'>
+        <div className='flex items-center'>
+          <ArrowLeft className='h-5 w-5 mr-2' />
+          <h1 className='text-xl md:text-[32px] text-[#101010] font-medium'>
             Bundle
           </h1>
         </div>
         <Button
           onClick={() => setIsAddDialogOpen(true)}
-          className="bg-black text-white hover:bg-gray-800 rounded px-4 py-2 h-10"
+          className='bg-black text-white hover:bg-gray-800 rounded px-4 py-2 h-10'
         >
           Add Item
         </Button>
       </div>
 
       {/* Bundle Items */}
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {data?.data?.map((item: BundleItem) => (
           <div
             key={item._id}
-            className="border border-gray-200 rounded-lg p-4 flex items-center justify-between"
+            className='border border-gray-200 rounded-lg p-4 flex items-center justify-between'
           >
-            <div className="flex items-center">
-              <div className="relative w-16 h-16 mr-4 overflow-hidden rounded-md">
+            <div className='flex items-center'>
+              <div className='relative w-16 h-16 mr-4 overflow-hidden rounded-md'>
                 {item.images?.[0] ? (
                   <Image
                     src={`${IMAGE}${item.images[0]}`}
                     alt={item.name}
                     width={64}
                     height={64}
-                    className="object-cover"
+                    className='object-cover'
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-xs text-gray-500">No Image</span>
+                  <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
+                    <span className='text-xs text-gray-500'>No Image</span>
                   </div>
                 )}
               </div>
               <div>
-                <h3 className="font-medium">{item.name}</h3>
-                <div className="text-sm text-gray-600">
+                <h3 className='font-medium'>{item.name}</h3>
+                <div className='text-sm text-gray-600'>
                   <p>Rent: ${item.rentPrice}/mo</p>
                   <p>Buy: ${item.buyPrice}</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className='flex items-center space-x-4'>
               <Link
                 href={`/bundle/${item._id}`}
-                className="text-gray-500 hover:text-gray-700"
+                className='text-gray-500 hover:text-gray-700'
               >
-                <Pencil className="h-5 w-5" />
+                <Pencil className='h-5 w-5' />
               </Link>
               <button
-                className="text-red-500 hover:text-red-700"
+                className='text-red-500 hover:text-red-700'
                 onClick={() => handleDeleteClick(item._id)}
               >
-                <Trash className="h-5 w-5" />
+                <Trash className='h-5 w-5' />
               </button>
             </div>
           </div>
@@ -621,22 +637,22 @@ export default function BundlePage() {
 
       {/* Pagination */}
       {data?.data?.length > 0 && (
-        <div className="mt-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="flex items-center space-x-2">
+        <div className='mt-8'>
+          <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
+            <div className='flex items-center space-x-2'>
               <Button
-                variant="outline"
-                className="bg-black text-white hover:bg-gray-800 rounded px-4"
+                variant='outline'
+                className='bg-black text-white hover:bg-gray-800 rounded px-4'
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                <ArrowLeft className="h-4 w-4 mr-1" />
+                <ArrowLeft className='h-4 w-4 mr-1' />
                 Back
               </Button>
 
-              <div className="flex items-center">
+              <div className='flex items-center'>
                 <Button
-                  variant="outline"
+                  variant='outline'
                   className={`w-8 h-8 p-0 ${
                     currentPage === 1 ? "bg-black text-white" : "border"
                   }`}
@@ -646,25 +662,25 @@ export default function BundlePage() {
                 </Button>
 
                 {totalPages > 3 && currentPage > 2 && (
-                  <span className="mx-1">...</span>
+                  <span className='mx-1'>...</span>
                 )}
 
                 {currentPage !== 1 && currentPage !== totalPages && (
                   <Button
-                    variant="outline"
-                    className="w-8 h-8 p-0 bg-black text-white mx-1"
+                    variant='outline'
+                    className='w-8 h-8 p-0 bg-black text-white mx-1'
                   >
                     {currentPage}
                   </Button>
                 )}
 
                 {totalPages > 3 && currentPage < totalPages - 1 && (
-                  <span className="mx-1">...</span>
+                  <span className='mx-1'>...</span>
                 )}
 
                 {totalPages > 1 && (
                   <Button
-                    variant="outline"
+                    variant='outline'
                     className={`w-8 h-8 p-0 ${
                       currentPage === totalPages
                         ? "bg-black text-white"
@@ -678,27 +694,27 @@ export default function BundlePage() {
               </div>
 
               <Button
-                variant="outline"
-                className="bg-black text-white hover:bg-gray-800 rounded px-4"
+                variant='outline'
+                className='bg-black text-white hover:bg-gray-800 rounded px-4'
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
                 Next
-                <ArrowLeft className="h-4 w-4 ml-1 rotate-180" />
+                <ArrowLeft className='h-4 w-4 ml-1 rotate-180' />
               </Button>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">Page</span>
+            <div className='flex items-center space-x-2'>
+              <span className='text-sm'>Page</span>
               <Input
-                className="w-16 h-8 text-center"
+                className='w-16 h-8 text-center'
                 value={inputPage}
                 onChange={(e) => setInputPage(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleGoToPage()}
               />
               <Button
-                variant="outline"
-                className="h-8 px-3"
+                variant='outline'
+                className='h-8 px-3'
                 onClick={handleGoToPage}
               >
                 Go
@@ -710,27 +726,27 @@ export default function BundlePage() {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <div className="flex flex-col items-center justify-center py-4">
-            <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-              <Trash className="h-6 w-6 text-red-500" />
+        <DialogContent className='sm:max-w-md'>
+          <div className='flex flex-col items-center justify-center py-4'>
+            <div className='w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4'>
+              <Trash className='h-6 w-6 text-red-500' />
             </div>
-            <DialogTitle className="text-center mb-2">
+            <DialogTitle className='text-center mb-2'>
               This bundle will be permanently deleted.
             </DialogTitle>
-            <DialogDescription className="text-center mb-6">
+            <DialogDescription className='text-center mb-6'>
               Are you Sure?
             </DialogDescription>
-            <div className="flex w-full space-x-4">
+            <div className='flex w-full space-x-4'>
               <Button
-                variant="outline"
-                className="flex-1"
+                variant='outline'
+                className='flex-1'
                 onClick={() => setIsDeleteModalOpen(false)}
               >
                 No I Don&apos;t
               </Button>
               <Button
-                className="flex-1 bg-black text-white hover:bg-gray-800"
+                className='flex-1 bg-black text-white hover:bg-gray-800'
                 onClick={handleConfirmDelete}
               >
                 Yes I&apos;m Sure
@@ -742,25 +758,25 @@ export default function BundlePage() {
 
       {/* Add product dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={handleDialogChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogTitle className="sr-only">Add Products to Bundle</DialogTitle>
+        <DialogContent className='sm:max-w-md'>
+          <DialogTitle className='sr-only'>Add Products to Bundle</DialogTitle>
 
           {/* Search input */}
-          <div className="relative mb-4 mt-2">
+          <div className='relative mb-4 mt-2'>
             <input
-              type="text"
-              placeholder="Type product name"
+              type='text'
+              placeholder='Type product name'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500"
+              className='w-full border border-gray-300 rounded-md py-2 pl-3 pr-10 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:border-gray-500'
             />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+            <div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+              <Search className='h-5 w-5 text-gray-400' />
             </div>
           </div>
 
           {/* Product list */}
-          <div className="space-y-2 max-h-[50vh] overflow-y-auto mb-4">
+          <div className='space-y-2 max-h-[50vh] overflow-y-auto mb-4'>
             {filteredProducts.map((product: ProductItem) => {
               const isSelected = selectedProducts.includes(product._id);
 
@@ -773,23 +789,25 @@ export default function BundlePage() {
                       : "bg-gray-50"
                   }`}
                 >
-                  <div className="flex items-center">
-                    <div className="relative w-8 h-8 mr-3">
+                  <div className='flex items-center'>
+                    <div className='relative w-8 h-8 mr-3'>
                       {product.images?.[0] ? (
                         <Image
                           src={`${IMAGE}${product.images[0]}`}
                           alt={product.name}
                           width={32}
                           height={32}
-                          className="object-contain"
+                          className='object-contain'
                         />
                       ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-xs text-gray-500">No Image</span>
+                        <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
+                          <span className='text-xs text-gray-500'>
+                            No Image
+                          </span>
                         </div>
                       )}
                     </div>
-                    <span className="text-sm font-medium">{product.name}</span>
+                    <span className='text-sm font-medium'>{product.name}</span>
                   </div>
 
                   <button
@@ -800,7 +818,7 @@ export default function BundlePage() {
                         : "bg-gray-200 text-gray-500 hover:bg-gray-300"
                     }`}
                   >
-                    <Check className="h-4 w-4" />
+                    <Check className='h-4 w-4' />
                   </button>
                 </div>
               );
@@ -811,7 +829,7 @@ export default function BundlePage() {
             <Button
               onClick={handleNext}
               disabled={selectedProducts.length === 0}
-              className="w-full bg-black text-white hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className='w-full bg-black text-white hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed'
             >
               Next
             </Button>

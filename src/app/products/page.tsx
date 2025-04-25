@@ -365,6 +365,7 @@ import {
   useGetProductsQuery,
 } from "@/redux/features/product/ProductAPI";
 import { toast } from "sonner";
+import Loading from "@/components/loading/Loading";
 
 type ProductType = "Buy & Rent" | "Only Rent" | "All";
 
@@ -441,37 +442,36 @@ export default function ProductsPage() {
     }) || [];
 
   if (isLoading) {
-    return <div className="container mx-auto p-4">Loading products...</div>;
+    return <Loading />;
   }
 
   if (isError) {
     return (
-      <div className="container mx-auto p-4 text-red-500">
+      <div className='container mx-auto p-4 text-red-500'>
         Error loading products
       </div>
     );
   }
 
-
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center">
-          <Button variant="ghost" size="icon" className="mr-2">
-            <ArrowLeft className="h-5 w-5" />
+    <div className='container mx-auto p-4'>
+      <div className='mb-6 flex items-center justify-between'>
+        <div className='flex items-center'>
+          <Button variant='ghost' size='icon' className='mr-2'>
+            <ArrowLeft className='h-5 w-5' />
           </Button>
-          <h1 className="text-xl font-semibold">Products</h1>
+          <h1 className='text-xl font-semibold'>Products</h1>
         </div>
         <Link
-          href="/products/add-products"
-          className="bg-[#000000] text-[#FDFDFD] py-3 px-7 cursor-pointer hover:bg-gray-800 rounded-md"
+          href='/products/add-products'
+          className='bg-[#000000] text-[#FDFDFD] py-3 px-7 cursor-pointer hover:bg-gray-800 rounded-md'
         >
           Add Products
         </Link>
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center justify-between">
-        <div className="flex gap-2">
+      <div className='mb-4 flex flex-wrap items-center justify-between'>
+        <div className='flex gap-2'>
           <button
             onClick={() => setActiveTab("All")}
             className={`px-4 py-2 rounded-full ${
@@ -504,24 +504,24 @@ export default function ProductsPage() {
           </button>
         </div>
 
-        <div className="text-sm font-medium mt-2 sm:mt-0 text-[#545454]">
-          Total: <span className="font-medium text-lg">{totalProducts}</span>
+        <div className='text-sm font-medium mt-2 sm:mt-0 text-[#545454]'>
+          Total: <span className='font-medium text-lg'>{totalProducts}</span>
         </div>
       </div>
 
       {/* Product Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-lg">No products found</p>
+        <div className='text-center py-10'>
+          <p className='text-lg'>No products found</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6'>
           {filteredProducts.map((product: Product) => (
             <div
               key={product._id}
-              className="bg-white rounded-md overflow-hidden shadow-md"
+              className='bg-white rounded-md overflow-hidden shadow-md'
             >
-              <div className="relative h-[200px] w-full bg-[#F5F5F5]">
+              <div className='relative h-[200px] w-full bg-[#F5F5F5]'>
                 <Image
                   src={
                     product.images?.[0]
@@ -530,26 +530,26 @@ export default function ProductsPage() {
                   }
                   alt={product.name}
                   fill
-                  className="object-contain p-4"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className='object-contain p-4'
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 />
               </div>
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-lg text-[#000000] line-clamp-1">
+              <div className='p-4'>
+                <div className='flex justify-between items-start mb-2'>
+                  <h3 className='font-medium text-lg text-[#000000] line-clamp-1'>
                     {product.name}
                   </h3>
                   <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 -mt-1 -mr-2"
+                    variant='ghost'
+                    size='icon'
+                    className='h-8 w-8 -mt-1 -mr-2'
                   >
-                    <Info className="h-4 w-4 text-gray-500" />
+                    <Info className='h-4 w-4 text-gray-500' />
                   </Button>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-col gap-1">
-                    <p className="text-lg text-[#333333]">
+                <div className='flex justify-between items-center'>
+                  <div className='flex flex-col gap-1'>
+                    <p className='text-lg text-[#333333]'>
                       Price: ${product.price}
                     </p>
                     {/* {product.rentPrice && (
@@ -559,7 +559,7 @@ export default function ProductsPage() {
                       <p className='text-sm text-[#333333]'>Buy: ${product.price}</p>
                     )} */}
                   </div>
-                  <div className="relative">
+                  <div className='relative'>
                     <DropdownMenu
                       open={activeDropdown === product._id}
                       onOpenChange={(open) => {
@@ -571,22 +571,22 @@ export default function ProductsPage() {
                       }}
                     >
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
+                        <Button variant='ghost' size='icon' className='h-8 w-8'>
+                          <MoreVertical className='h-4 w-4' />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-40">
+                      <DropdownMenuContent align='end' className='w-40'>
                         <Link href={`/products/${product._id}`}>
                           <DropdownMenuItem
                             // onClick={() => handleEdit(product._id)}
-                            className="cursor-pointer"
+                            className='cursor-pointer'
                           >
                             Edit
                           </DropdownMenuItem>
                         </Link>
                         <DropdownMenuItem
                           onClick={() => handleDelete(product._id)}
-                          className="text-red-500 cursor-pointer"
+                          className='text-red-500 cursor-pointer'
                         >
                           Delete
                         </DropdownMenuItem>
@@ -605,12 +605,12 @@ export default function ProductsPage() {
 
       {/* Pagination - Only show if there are multiple pages */}
       {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className='flex flex-col sm:flex-row items-center justify-center gap-4'>
           <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  href="#"
+                  href='#'
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageChange(currentPage - 1);
@@ -636,7 +636,7 @@ export default function ProductsPage() {
                 return (
                   <PaginationItem key={pageNum}>
                     <PaginationLink
-                      href="#"
+                      href='#'
                       onClick={(e) => {
                         e.preventDefault();
                         handlePageChange(pageNum);
@@ -654,7 +654,7 @@ export default function ProductsPage() {
 
               <PaginationItem>
                 <PaginationNext
-                  href="#"
+                  href='#'
                   onClick={(e) => {
                     e.preventDefault();
                     handlePageChange(currentPage + 1);
@@ -669,11 +669,11 @@ export default function ProductsPage() {
             </PaginationContent>
           </Pagination>
 
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Page</span>
+          <div className='flex items-center gap-2'>
+            <span className='text-sm'>Page</span>
             <Input
-              type="number"
-              min="1"
+              type='number'
+              min='1'
               max={totalPages}
               value={pageInput}
               onChange={handlePageInputChange}
@@ -682,13 +682,13 @@ export default function ProductsPage() {
                   handleGoToPage();
                 }
               }}
-              className="w-16 h-9 text-center"
+              className='w-16 h-9 text-center'
             />
             <Button
-              variant="default"
-              size="sm"
+              variant='default'
+              size='sm'
               onClick={handleGoToPage}
-              className="bg-black hover:bg-gray-800"
+              className='bg-black hover:bg-gray-800'
             >
               Go
             </Button>
