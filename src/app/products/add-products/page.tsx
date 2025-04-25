@@ -144,7 +144,6 @@ export default function AddProductForm() {
 
     try {
       const res = await createProduct(formDataToSend).unwrap();
-      console.log("Product created successfully", res);
 
       toast.success(res?.message ||"Product created successfully!");
 

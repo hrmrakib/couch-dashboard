@@ -46,7 +46,6 @@ export default function DashboardSidebar() {
 
   // const isActive = (href: string) => pathname === href;
 
-  console.log(pathname);
 
   const handleLogout = async () => {
     toast.success("Logout Successfully");

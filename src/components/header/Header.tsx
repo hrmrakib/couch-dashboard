@@ -22,7 +22,6 @@ const Header = () => {
   const router = useRouter();
 
   const { data } = useUserProfileQuery(undefined);
-  // console.log(data?.data);
 
   const handleLogout = async () => {
     localStorage.removeItem("accessToken");

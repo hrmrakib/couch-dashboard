@@ -16,7 +16,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     pathname === "/forget-password" ||
     pathname === "/create-password";
 
-  console.log(pathname);
+
 
   return (
     <>

@@ -46,7 +46,6 @@
 //   const totalPages = 12;
 
 //   const {data}= useGetProductsQuery(undefined)
-//   console.log(data, "data")
 
 //   const handlePageChange = (page: number) => {
 //     setCurrentPage(page);
@@ -67,12 +66,10 @@
 //   };
 
 //   const handleEdit = (id: string) => {
-//     console.log(`Edit product ${id}`);
 //     setActiveDropdown(null);
 //   };
 
 //   const handleDelete = (id: string) => {
-//     console.log(`Delete product ${id}`);
 //     setActiveDropdown(null);
 //   };
 
@@ -418,7 +415,6 @@ export default function ProductsPage() {
   };
 
   // const handleEdit = (id: string) => {
-  //   console.log(`Edit product ${id}`);
   //   alert(`Edit product ${id}`);
   //   setActiveDropdown(null);
   // };
@@ -456,7 +452,6 @@ export default function ProductsPage() {
     );
   }
 
-  console.log(filteredProducts, "filteredProducts");
 
   return (
     <div className="container mx-auto p-4">

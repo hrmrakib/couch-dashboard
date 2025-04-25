@@ -20,7 +20,6 @@
 
 //   const [bundleEdit] = useBundleEditMutation()
 
-//   console.log(data)
 //   const [selectedItems, setSelectedItems] = useState<BundleItem[]>([
 //     { id: "1", name: "Wooden Sofa", icon: "🪑" },
 //     { id: "2", name: "Italiano Bed", icon: "🛏️" },
@@ -335,14 +334,12 @@
 //       // If you need to update products in the bundle
 //       formData.append("products", JSON.stringify(selectedItems.map(item => item.id)));
 
-//       console.log(formData)
 
 //       const result = await bundleEdit({
 //         id: params.id,
 //         data: formData
 //       }).unwrap();
 
-//       console.log(result);
 
 //       toast.success(result.message || "Bundle updated successfully!");
 //     } catch (error: unknown) {

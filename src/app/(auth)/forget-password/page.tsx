@@ -59,10 +59,8 @@ export default function SignUp() {
       !newErrors.confirmPassword
     ) {
       // In a real app, you would handle registration here
-      console.log("Registration with:", formData);
 
       const response = await forgetPassword(formData).unwrap();
-      console.log(response);
 
       if (response?.success) {
         setIsLoading(false);

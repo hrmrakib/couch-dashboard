@@ -80,11 +80,9 @@ export default function SignIn() {
         password: formData.password,
       };
 
-      console.log("Registration with:", data);
 
       const res = await login(data).unwrap();
 
-      console.log({ res });
 
       if (res?.error) {
         toast.error(res.message);
@@ -92,7 +90,6 @@ export default function SignIn() {
         return;
       }
       if (res?.success) {
-        console.log("success");
         toast.success(res.message);
         localStorage.setItem("accessToken", res?.data?.token);
         await saveTokens(res?.data?.token);
@@ -105,7 +102,6 @@ export default function SignIn() {
       toast.error("Please fill in all fields correctly.");
     }
   };
-  console.log(loading);
 
   return (
     <div className='min-h-screen bg-[url("/auth/bg.png")] bg-cover bg-center flex items-center justify-center p-4'>

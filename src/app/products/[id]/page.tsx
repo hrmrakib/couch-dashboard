@@ -181,7 +181,6 @@ export default function EditProductForm() {
         formData: formDataToSend
       }).unwrap();
       
-      console.log("Product updated successfully", res);
       toast.success(res?.message || "Product updated successfully!");
       router.push("/products");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

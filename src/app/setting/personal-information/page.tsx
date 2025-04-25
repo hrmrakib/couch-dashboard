@@ -30,7 +30,6 @@
 //   const fileInputRef = useRef<HTMLInputElement>(null);
 
 //   const {data} = useUserProfileQuery(undefined)
-//   console.log(data?.data)
 
 //   const handleEdit = () => {
 //     if (isEditing) {
@@ -658,7 +657,6 @@ export default function PersonalInformation() {
   if (error) return <div>Error fetching profile</div>;
 
   const IMAGE_URL = process.env.NEXT_PUBLIC_IMAGE_URL || "";
-  console.log(IMAGE_URL)
 
   // Determine the image source
   const imageSrc = tempImage

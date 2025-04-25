@@ -85,7 +85,6 @@ export default function SignUp() {
         password: formData.password,
       };
 
-      console.log("Registration with:", data);
 
       const res = await register(data).unwrap();
 
@@ -100,7 +99,6 @@ export default function SignUp() {
         setLoading(false);
       }
 
-      console.log({ res });
 
       setLoading(false);
       // Simulate successful registration
@@ -108,7 +106,6 @@ export default function SignUp() {
     }
   };
 
-  console.log(formData);
 
   return (
     <div className='min-h-screen bg-[url("/auth/bg.png")] bg-cover bg-center flex items-center justify-center p-4'>

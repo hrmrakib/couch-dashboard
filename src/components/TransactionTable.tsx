@@ -13,7 +13,6 @@
 // export function TransactionTable() {
 //   const { data } = useTransactionsQuery(undefined);
 //   const user = data?.data ;
-//   console.log(user)
 
 
 //   const transactions = [

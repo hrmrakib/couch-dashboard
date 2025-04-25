@@ -261,7 +261,6 @@
 //   const [products, setProducts] = useState<Product[]>(mockProducts);
 
 //   const {data} = useBuyProductsGetQuery(undefined)
-//   console.log(data?.data)
 
 //   const itemsPerPage = 12;
 

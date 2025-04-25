@@ -72,9 +72,6 @@ export default function SignUp() {
       !newErrors.password &&
       !newErrors.confirmPassword
     ) {
-      // In a real app, you would handle registration here
-      console.log("Registration with:", formData);
-
       // Simulate successful registration
       router.push("/dashboard");
     }

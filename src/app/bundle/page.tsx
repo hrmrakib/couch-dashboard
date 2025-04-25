@@ -56,7 +56,6 @@
 
 //   const {data:list} =useAllListQuery({})
 
-//   console.log(list, "allList")
 
 //   const totalPages = Math.ceil((data?.data?.length || 0) / 10) || 1; // Calculate based on data length
 
@@ -102,7 +101,6 @@
 //   const filteredProducts = productItems.filter((product) =>
 //     product.name.toLowerCase().includes(searchQuery.toLowerCase())
 //   );
-// // console.log(filteredProducts, "filteredProducts")
 //   // Handle toggling product selection
 //   const toggleProductSelection = (productId: string) => {
 //     setSelectedProducts((prev) => {
@@ -457,7 +455,6 @@ export default function BundlePage() {
   }
   const storeData = useSelector((state: RootState) => state.store.products);
 
-  console.log(storeData, "storeData");
 
   const { data } = useBundlesGetQuery(undefined);
   const [deleteBundle] = useDeleteBundleMutation();
