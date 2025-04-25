@@ -102,6 +102,7 @@ export default function SignUp() {
 
       console.log({ res });
 
+      setLoading(false);
       // Simulate successful registration
       router.push("/verify");
     }

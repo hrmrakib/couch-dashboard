@@ -24,9 +24,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { logout } from "@/service/authService";
+import { toast } from "sonner";
 export default function DashboardSidebar() {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const pathname = usePathname();
   const menuItems = [
@@ -47,25 +48,22 @@ export default function DashboardSidebar() {
 
   console.log(pathname);
 
-  
-
-
-  const handleLogout = ()=>{
-    alert('logout')
-    localStorage.removeItem('accessToken')
-    router.push('/signin')
-    
-  }
+  const handleLogout = async () => {
+    toast.success("Logout Successfully");
+    await logout();
+    localStorage.removeItem("accessToken");
+    router.push("/signin");
+  };
 
   return (
     <Sidebar>
-      <SidebarHeader className='border-b border-gray-100 py-4'>
-        <div className='px-6'>
-          <Image src='/logo.svg' alt='logo' width={57} height={64} />
+      <SidebarHeader className="border-b border-gray-100 py-4">
+        <div className="px-6">
+          <Image src="/logo.svg" alt="logo" width={57} height={64} />
         </div>
       </SidebarHeader>
-      <SidebarContent className='px-6'>
-        <SidebarMenu className='flex flex-col gap-5'>
+      <SidebarContent className="px-6">
+        <SidebarMenu className="flex flex-col gap-5">
           {menuItems.map((item, index) => (
             <SidebarMenuItem key={index}>
               <SidebarMenuButton
@@ -78,25 +76,25 @@ export default function DashboardSidebar() {
               >
                 <Link
                   href={item.href}
-                  className='flex items-center gap-3 py-5 px-2 rounded-none'
+                  className="flex items-center gap-3 py-5 px-2 rounded-none"
                 >
-                  <item.icon className='h-5 w-5' />
-                  <span className='text-lg text-[#1A1918]'>{item.label}</span>
+                  <item.icon className="h-5 w-5" />
+                  <span className="text-lg text-[#1A1918]">{item.label}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className='border-t border-gray-100 p-4'>
+      <SidebarFooter className="border-t border-gray-100 p-4">
         <Button
-        // onClick={handleLogout}
-        onClick={handleLogout}
-          variant='destructive'
-          className='w-full flex items-center gap-2'
-          size='sm'
+          // onClick={handleLogout}
+          onClick={handleLogout}
+          variant="destructive"
+          className="w-full flex items-center cursor-pointer gap-2"
+          size="sm"
         >
-          <LogOut className='h-4 w-4' />
+          <LogOut className="h-4 w-4" />
           <span>Log Out</span>
         </Button>
       </SidebarFooter>

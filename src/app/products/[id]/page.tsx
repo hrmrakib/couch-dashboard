@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, type ChangeEvent, type FormEvent } from "react";
+import { useState, useRef, type ChangeEvent, type FormEvent, useEffect } from "react";
 import Image from "next/image";
 import { ArrowLeft, X, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Link from "next/link";
-import { useCreateProductMutation } from "@/redux/features/product/ProductAPI";
-import { useRouter } from "next/navigation";
+import {
+  useGetProductByIdQuery,
+  useUpdateProductMutation,
+} from "@/redux/features/product/ProductAPI";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type ProductFormData = {
@@ -31,12 +33,17 @@ type ProductFormData = {
   isBuyable: boolean;
 };
 
-export default function AddProductForm() {
+export default function EditProductForm() {
+  const params = useParams();
   const router = useRouter();
-  const [images, setImages] = useState<File[]>([]); // Changed to store File objects
+  
+  const { data: productData, isLoading } = useGetProductByIdQuery(params.id as string);
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  
+  const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [createProduct] = useCreateProductMutation();
   const [newMaterial, setNewMaterial] = useState("");
 
   const [formData, setFormData] = useState<ProductFormData>({
@@ -51,12 +58,41 @@ export default function AddProductForm() {
     length: "",
     description: "",
     price: 0,
-    rating: 1, // Changed default to 1 to meet validation
+    rating: 1,
     rentalPrice: "",
     color: "",
     isRentable: false,
     isBuyable: false,
   });
+
+  // Set initial form data when product data is loaded
+  useEffect(() => {
+    if (productData?.data) {
+      const product = productData.data;
+      setFormData({
+        name: product.name || "",
+        category: product.category || "",
+        roomType: product.roomType || "",
+        stock: product.stock || 0,
+        size: product.size || "",
+        materials: product.materials || [],
+        height: product.height || "",
+        width: product.width || "",
+        length: product.length || "",
+        description: product.description || "",
+        price: product.price || 0,
+        rating: product.rating || 1,
+        rentalPrice: product.rentPrice?.toString() || "",
+        color: product.color || "",
+        isRentable: product.isRentable || false,
+        isBuyable: product.isBuyable || false,
+      });
+      
+      if (product.images) {
+        setExistingImages(product.images);
+      }
+    }
+  }, [productData]);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -75,7 +111,7 @@ export default function AddProductForm() {
     const value = e.target.valueAsNumber || 0;
     setFormData((prev) => ({
       ...prev,
-      [fieldName]: isNaN(value) ? 0 : value, // Handle NaN cases
+      [fieldName]: isNaN(value) ? 0 : value,
     }));
   };
 
@@ -100,14 +136,17 @@ export default function AddProductForm() {
     if (!e.target.files || e.target.files.length === 0) return;
 
     setUploading(true);
-
     const files = Array.from(e.target.files);
     setImages((prev) => [...prev, ...files]);
     setUploading(false);
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveImage = (index: number, isExisting: boolean = false) => {
+    if (isExisting) {
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      setImages((prev) => prev.filter((_, i) => i !== index));
+    }
   };
 
   const triggerFileInput = () => {
@@ -120,47 +159,56 @@ export default function AddProductForm() {
     const formDataToSend = new FormData();
 
     // Append all form fields
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append("stock", formData.stock.toString());
-    formDataToSend.append("price", formData.price.toString());
-    formDataToSend.append("rating", formData.rating.toString());
-    formDataToSend.append("color", formData.color);
-    formDataToSend.append("size", formData.size);
-    formDataToSend.append("materials", JSON.stringify(formData.materials));
-    formDataToSend.append("category", formData.category);
-    formDataToSend.append("roomType", formData.roomType);
-    formDataToSend.append("rentalPrice", formData.rentalPrice);
-    formDataToSend.append("height", formData.height);
-    formDataToSend.append("width", formData.width);
-    formDataToSend.append("length", formData.length);
-    formDataToSend.append("isRentable", formData.isRentable.toString());
-    formDataToSend.append("isBuyable", formData.isBuyable.toString());
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === 'materials') {
+        formDataToSend.append(key, JSON.stringify(value));
+      } else {
+        formDataToSend.append(key, value.toString());
+      }
+    });
 
-    // Append images
+    // Append existing images that haven't been removed
+    formDataToSend.append("existingImages", JSON.stringify(existingImages));
+    
+    // Append new images
     images.forEach((image) => {
       formDataToSend.append("images", image);
     });
 
     try {
-      const res = await createProduct(formDataToSend).unwrap();
-      console.log("Product created successfully", res);
-
-      toast.success(res?.message ||"Product created successfully!");
-
+      const res = await updateProduct({
+        id: params.id as string,
+        formData: formDataToSend
+      }).unwrap();
+      
+      console.log("Product updated successfully", res);
+      toast.success(res?.message || "Product updated successfully!");
       router.push("/products");
-    } catch (error) {
-      console.error("Failed to create product:", error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Failed to update product:", error);
+      toast.error(error?.data?.message || "Failed to update product");
     }
   };
 
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  const IMAGE = process.env.NEXT_PUBLIC_IMAGE_URL;
+
   return (
-    <div className=" mx-auto p-4">
+    <div className=" p-4 ">
       <div className="mb-6 flex items-center">
-        <Button variant="ghost" size="icon" className="mr-2">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-2"
+          onClick={() => router.push("/products")}
+        >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-semibold">Products</h1>
+        <h1 className="text-xl font-semibold">Edit Product</h1>
       </div>
 
       <form
@@ -195,18 +243,41 @@ export default function AddProductForm() {
                 fill="#545454"
               />
             </svg>
-
             <span className="text-sm text-[#545454]">Upload Image</span>
           </div>
 
+          {/* Existing images */}
+          {existingImages.map((image, index) => (
+            <div
+              key={`existing-${index}`}
+              className="relative w-[140px] h-[180px] border border-gray-200 rounded-md overflow-hidden"
+            >
+              <Image
+                src={`${IMAGE}${image}`}
+                alt={`Product image ${index + 1}`}
+                fill
+                className="object-cover"
+                priority
+              />
+              <button
+                type="button"
+                className="absolute top-1 right-1 bg-black rounded-full p-1"
+                onClick={() => handleRemoveImage(index, true)}
+              >
+                <X className="h-3 w-3 text-white" />
+              </button>
+            </div>
+          ))}
+
+          {/* Newly uploaded images */}
           {images.map((image, index) => (
             <div
-              key={index}
+              key={`new-${index}`}
               className="relative w-[140px] h-[180px] border border-gray-200 rounded-md overflow-hidden"
             >
               <Image
                 src={URL.createObjectURL(image)}
-                alt={`Product image ${index + 1}`}
+                alt={`New product image ${index + 1}`}
                 fill
                 className="object-cover"
               />
@@ -400,7 +471,7 @@ export default function AddProductForm() {
             </Label>
 
             <RadioGroup
-              defaultValue="isRentable"
+              value={formData.isRentable ? "isRentable" : "isBuyable"}
               className="py-2.5 flex items-center space-x-6"
               onValueChange={(value) => {
                 setFormData((prev) => ({
@@ -540,59 +611,14 @@ export default function AddProductForm() {
           </div>
         </div>
 
-        {/* Rating (hidden but included in form) */}
-        <input type="hidden" name="rating" value={formData.rating} />
-
         {/* Action Buttons */}
         <div className="flex justify-end gap-4">
-          <Link
-            href="/products/add-variants"
-            className="h-14 text-[#101010] text-lg font-medium py-2.5 px-4 border border-[#101010] rounded-md flex items-center gap-2"
-          >
-            <span> Add Variant </span>
-            <svg
-              width="25"
-              height="24"
-              viewBox="0 0 25 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.75 3.75H6.25C5.14543 3.75 4.25 4.64543 4.25 5.75V8.25C4.25 9.35457 5.14543 10.25 6.25 10.25H8.75C9.85457 10.25 10.75 9.35457 10.75 8.25V5.75C10.75 4.64543 9.85457 3.75 8.75 3.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M17.5 3.75V7M17.5 7V10.25M17.5 7H14.25M17.5 7H20.75"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.75 13.75H6.25C5.14543 13.75 4.25 14.6454 4.25 15.75V18.25C4.25 19.3546 5.14543 20.25 6.25 20.25H8.75C9.85457 20.25 10.75 19.3546 10.75 18.25V15.75C10.75 14.6454 9.85457 13.75 8.75 13.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M18.75 13.75H16.25C15.1454 13.75 14.25 14.6454 14.25 15.75V18.25C14.25 19.3546 15.1454 20.25 16.25 20.25H18.75C19.8546 20.25 20.75 19.3546 20.75 18.25V15.75C20.75 14.6454 19.8546 13.75 18.75 13.75Z"
-                stroke="#101010"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
-
           <Button
             type="submit"
             className="h-14 w-[200px] text-[#FFFFFF] text-lg font-medium bg-[#101010] cursor-pointer"
+            disabled={isUpdating}
           >
-            Save Product
+            {isUpdating ? "Updating..." : "Update Product"}
           </Button>
         </div>
       </form>

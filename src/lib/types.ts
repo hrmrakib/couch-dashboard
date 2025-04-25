@@ -1,4 +1,4 @@
-export type ProductStatus = "pending" | "confirm" | "cancel"
+export type ProductStatus = "pending" | "success" | "cancel"
 
 export interface ProductDetails {
   model: string
@@ -20,6 +20,7 @@ export interface Product {
   name: string
   price: number
   image: string
+  description: string
   seller: Seller
   status: ProductStatus
   details: ProductDetails
