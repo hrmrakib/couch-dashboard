@@ -99,14 +99,13 @@ export default function SignIn() {
         setLoading(false);
         router.push("/");
       }
-    }
-    else {
+    } else {
       setLoading(false);
       return;
       toast.error("Please fill in all fields correctly.");
     }
   };
-  console.log(loading)
+  console.log(loading);
 
   return (
     <div className='min-h-screen bg-[url("/auth/bg.png")] bg-cover bg-center flex items-center justify-center p-4'>
