@@ -5,8 +5,8 @@ import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRegisterMutation } from "@/redux/features/auth/Authentication";
 import { toast } from "sonner";
+import { useRegisterMutation } from "@/redux/features/auth/Authentication";
 
 export default function SignUp() {
   const router = useRouter();
